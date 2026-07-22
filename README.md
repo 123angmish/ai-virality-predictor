@@ -1,108 +1,360 @@
-# AI Virality Predictor
+# 🚀 AI Virality Predictor
 
-An AI-powered web application that analyzes and predicts the viral potential of videos. Built with **Flask**, **OpenCV**, **XGBoost**, and **Chart.js**, it extracts visual features, facial markers, and pacing signatures to score content and generate suggestions.
+<p align="center">
 
-## Features
+<img src="https://img.shields.io/badge/Python-3.10-blue?style=for-the-badge&logo=python">
+<img src="https://img.shields.io/badge/Flask-Web_App-black?style=for-the-badge&logo=flask">
+<img src="https://img.shields.io/badge/OpenCV-Computer_Vision-green?style=for-the-badge&logo=opencv">
+<img src="https://img.shields.io/badge/XGBoost-Machine_Learning-orange?style=for-the-badge">
+<img src="https://img.shields.io/badge/Bootstrap-5-purple?style=for-the-badge&logo=bootstrap">
+<img src="https://img.shields.io/badge/SQLite-Database-blue?style=for-the-badge">
 
-- **Double Analysis Modes**:
-  1. **Upload Video**: Process local footage files (MP4, AVI, MOV, MKV up to 500MB).
-  2. **Analyze YouTube URL**: Scrape views, likes, comments, and calculate engagement ratios using `yt-dlp`.
-- **OpenCV Computer Vision Extraction**:
-  - Motion energy and frame subtraction.
-  - Average brightness and standard contrast distribution.
-  - Video duration, FPS, and dimensional resolutions.
-  - Edge detection variance for image sharpness quality.
-  - Digital high-frequency noise levels estimation.
-  - Facial presence auditing and smile frequencies using Haar Cascade classifiers.
-  - Hook score analysis (visual stimulus in the first 3 seconds).
-  - Dominant color palettes extraction.
-- **XGBoost Machine Learning Classifier**:
-  - Multi-feature regression model predicting virality index scores (0-100).
-  - Automatic synthetic data training fallback if no pre-trained weights are present.
-- **Auditing Suggestions Engine**: Generates prioritize recommendations (e.g. improve lighting, adjust pacing cuts, stabilize shaky camera feed).
-- **Interactive Dashboards**:
-  - Circular SVG gauges.
-  - Chart.js Radar and comparative Bar graphs.
-  - **Comparison Dashboard**: Select two historical runs to compare side-by-side.
-  - **Report Exporting**: Generate and download professional PDF summary reports via `ReportLab`.
-- **Premium Glassmorphic UI**: Vibrant gradient overlays, dark and light toggles, hover animations, responsive layouts.
+</p>
 
 ---
 
-## Folder Structure
+# 🎥 AI Virality Predictor
+
+An AI-powered web application that predicts the viral potential of videos using **Machine Learning**, **Computer Vision**, and **OpenCV**.
+
+The application extracts visual features, analyzes video quality, evaluates engagement-related factors, and generates an AI-based Virality Score with actionable recommendations.
+
+---
+
+# ✨ Features
+
+## 🎬 Local Video Analysis
+
+- Upload MP4, AVI, MOV and MKV videos
+- OpenCV Frame Processing
+- Motion Analysis
+- Scene Change Detection
+- Brightness Analysis
+- Contrast Analysis
+- Face Detection
+- Emotion Detection
+- Audio Energy Extraction
+- Hook Score Analysis
+- Thumbnail Generation
+- AI Virality Prediction
+
+---
+
+## 🔗 YouTube URL Analysis
+
+Analyze any public YouTube video using its URL.
+
+Extracts:
+
+- 📹 Title
+- 👤 Channel Name
+- 👁 Views
+- 👍 Likes
+- 💬 Comments
+- 📅 Upload Date
+- 📝 Description
+- 🖼 Thumbnail
+
+The extracted metadata is processed through the Machine Learning model to estimate the video's viral potential.
+
+---
+
+# 🤖 Machine Learning Prediction
+
+The AI model predicts:
+
+- ⭐ Virality Score
+- 📈 Confidence Score
+- 🏆 Performance Category
+- 💡 Personalized Recommendations
+
+### Performance Categories
+
+🟢 Excellent
+
+🟢 Very Good
+
+🟡 Good
+
+🟠 Average
+
+🔴 Poor
+
+---
+
+# 📊 Analytics Dashboard
+
+The dashboard provides detailed analytics including:
+
+- Virality Score
+- Motion Score
+- Hook Score
+- Brightness
+- Contrast
+- Scene Changes
+- Face Count
+- Emotion Score
+- Audio Energy
+- Color Variance
+- Sharpness
+- Noise Analysis
+- Thumbnail Preview
+
+---
+
+# 📄 PDF Report
+
+Generate professional PDF reports containing:
+
+- Complete Analysis
+- Feature Summary
+- AI Prediction
+- Recommendations
+- Visual Graphs
+- Performance Overview
+
+---
+
+# 📚 Analysis History
+
+All previous analyses are stored in an SQLite database, allowing users to revisit historical predictions.
+
+---
+
+# ⚖️ Compare Videos
+
+Compare two analyses side-by-side to evaluate differences in viral potential and extracted features.
+
+---
+
+# 🛠 Technology Stack
+
+## Backend
+
+- Python
+- Flask
+
+## Machine Learning
+
+- XGBoost
+- Scikit-Learn
+- NumPy
+- Pandas
+
+## Computer Vision
+
+- OpenCV
+- DeepFace
+- RetinaFace
+
+## Frontend
+
+- HTML5
+- CSS3
+- JavaScript
+- Bootstrap 5
+
+## Database
+
+- SQLite
+
+## Deployment
+
+- Render
+
+---
+
+# 📂 Project Structure
 
 ```text
-AI-Virality-Predictor/
-├── app.py                      # Flask Application factory entrypoint
-├── config.py                   # Configuration parameters and folder creator
-├── requirements.txt            # Python dependencies lists
-├── routes.py                   # Blueprint HTTP routes and API endpoints
+AI-Virality-Predictor
+│
+├── app.py
+├── routes.py
+├── config.py
+├── requirements.txt
+├── README.md
+│
 ├── models/
-│   ├── database.py             # SQLite schema initialization and DB operations
-│   └── predictor.py            # XGBoost ML class, training, and prediction
 ├── services/
-│   ├── video_processor.py      # OpenCV video frame auditing and face cascades
-│   ├── youtube_extractor.py    # yt-dlp metadata scraping and engagement calculations
-│   ├── recommendation_engine.py# Benchmark auditing and suggestions logic
-│   └── report_generator.py     # ReportLab PDF building blocks
 ├── utils/
-│   └── helpers.py              # Magic bytes mime validations and security filename sanitization
 ├── templates/
-│   ├── base.html               # Main layout layout (navbar, footer, theme script)
-│   ├── index.html              # Landing page with YouTube input and recent history
-│   ├── upload.html             # Drag and drop upload and animated checklists
-│   ├── result.html             # Diagnostic score results and ChartJS canvases
-│   ├── history.html            # Searchable historical logs table
-│   └── compare.html            # Side-by-side video reports compare dashboard
-└── static/
-    ├── css/
-    │   └── style.css           # Theme custom properties, glass cards, and layouts
-    └── js/
-        ├── main.js             # Global theme cookie storage and sharing triggers
-        ├── upload.js           # AJAX chunk upload progress listener
-        └── result_charts.js    # ChartJS radar and proximity bar configs
+├── static/
+│   ├── css/
+│   ├── js/
+│   └── images/
+│
+├── trained_model/
+├── thumbnails/
+├── graphs/
+├── uploads/
+├── reports/
+└── history.db
 ```
 
 ---
 
-## Installation & Setup
+# ⚙ Installation
 
-1. **Clone or navigate to the project directory**:
-   ```bash
-   cd AI-Virality-Predictor
-   ```
+## Clone Repository
 
-2. **Install requirements**:
-   Ensure you have Python 3.8+ installed. Install the Python library requirements:
-   ```bash
-   pip install -r requirements.txt
-   ```
+```bash
+git clone https://github.com/yourusername/AI-Virality-Predictor.git
+```
 
-3. **Run the Flask application**:
-   ```bash
-   python app.py
-   ```
-   *The database schema will automatically initialize and train the default XGBoost model on startup.*
+## Navigate into Project
 
-4. **Access the application**:
-   Open [http://127.0.0.1:5000/](http://127.0.0.1:5000/) in your web browser.
+```bash
+cd AI-Virality-Predictor
+```
+
+## Create Virtual Environment
+
+```bash
+python -m venv venv
+```
+
+### Windows
+
+```bash
+venv\Scripts\activate
+```
+
+### macOS/Linux
+
+```bash
+source venv/bin/activate
+```
+
+## Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+## Run the Application
+
+```bash
+python app.py
+```
+
+Open your browser and visit:
+
+```
+http://127.0.0.1:5000
+```
 
 ---
 
-## Deployment & Production Tips
+# 🧠 AI Prediction Pipeline
 
-- **WSGI Production Server**: When deploying, wrap Flask in a WSGI container like `gunicorn`:
-  ```bash
-  gunicorn "app:create_app()" -b 0.0.0.0:8000 --workers 4
-  ```
-- **FFmpeg Integration**: The application automatically extracts audio metrics using FFmpeg if it's installed on the host system. Install FFmpeg to enable accurate vocal analysis:
-  - macOS: `brew install ffmpeg`
-  - Linux: `sudo apt install ffmpeg`
+```text
+            Video
+              │
+              ▼
+      Feature Extraction
+              │
+              ▼
+      OpenCV Processing
+              │
+              ▼
+   Machine Learning Model
+          (XGBoost)
+              │
+              ▼
+      Virality Prediction
+              │
+              ▼
+    AI Recommendations
+              │
+              ▼
+ Interactive Dashboard
+```
 
 ---
 
-## Future Scope
+# 🎯 Prediction Factors
 
-- Direct API connectors for Instagram Reels, TikTok, Facebook Watch, and X (Twitter) videos.
-- Deep Learning face detection models (like MTCNN or RetinaFace) and ResNet emotion embeddings for deeper expressions audits.
-- Multi-lingual transcription and title semantic analysis using NLP models.
+The Machine Learning model evaluates multiple features, including:
+
+- Video Duration
+- Resolution
+- FPS
+- Motion Score
+- Brightness
+- Contrast
+- Color Variance
+- Scene Changes
+- Face Count
+- Emotion Score
+- Audio Energy
+- Hook Score
+- Sharpness
+- Noise Level
+
+---
+
+# 📸 Application Modules
+
+- 🏠 Home Page
+- 📤 Upload Video
+- 🔗 YouTube Analysis
+- 📊 Analytics Dashboard
+- 📄 PDF Report
+- 📚 History
+- ⚖️ Compare Videos
+
+---
+
+# ⚠️ Note
+
+The application has been successfully developed and tested in a local environment.
+
+While deployed on cloud platforms (such as Render), **YouTube URL analysis may occasionally fail** because YouTube employs anti-bot protection that can block automated metadata extraction. This behavior is outside the application's control.
+
+The following modules continue to function normally:
+
+- ✅ Local Video Analysis
+- ✅ AI Prediction
+- ✅ Computer Vision Pipeline
+- ✅ Dashboard
+- ✅ PDF Reports
+- ✅ History
+- ✅ Comparison Module
+
+---
+
+# 🚀 Future Enhancements
+
+- Instagram Reels Analysis
+- TikTok Support
+- Facebook Video Analysis
+- X (Twitter) Video Analysis
+- Thumbnail Quality Optimizer
+- AI Caption Generator
+- Trending Topic Detection
+- Real-time Viral Forecasting
+
+---
+
+# 👩‍💻 Author
+
+## Angel Mishra
+
+**Electronics & Communication Engineering (ECE)**
+
+Python • Flask • Machine Learning • Computer Vision • OpenCV • XGBoost
+
+---
+
+# ⭐ Support
+
+If you found this project useful, consider giving it a ⭐ on GitHub.
+
+It helps support future development and encourages further improvements.
+
+---
+
+# 📜 License
+
+This project is intended for educational and research purposes.
