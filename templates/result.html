@@ -1,0 +1,278 @@
+{% extends 'base.html' %}
+
+{% block title %}Prediction Report: {{ analysis.title }} - ViralityAI{% endblock %}
+
+{% block content %}
+<!-- Results Header -->
+<div class="row align-items-center mb-4 gy-3">
+    <div class="col-md-8">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-2">
+                <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}" class="text-muted text-decoration-none">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('main.history') }}" class="text-muted text-decoration-none">History</a></li>
+                <li class="breadcrumb-item theme-text active" aria-current="page">Report #{{ analysis.id }}</li>
+            </ol>
+        </nav>
+        <h2 class="font-outfit theme-text mb-1 text-truncate" title="{{ analysis.title }}">{{ analysis.title }}</h2>
+        <p class="text-muted mb-0">Processed via {{ analysis.type|upper }} Analysis | {{ analysis.created_at }}</p>
+    </div>
+    <div class="col-md-4 text-md-end d-flex gap-2 justify-content-md-end">
+        <button class="btn btn-outline-light px-3 py-2 font-outfit" onclick="shareResult({{ analysis.id }})">
+            <i class="bi bi-share-fill me-2"></i>Share
+        </button>
+        <a href="{{ url_for('main.download_report', analysis_id=analysis.id) }}" class="btn btn-primary-gradient px-4 py-2 font-outfit">
+            <i class="bi bi-file-earmark-pdf-fill me-2"></i>Download PDF
+        </a>
+    </div>
+</div>
+
+<!-- Main Diagnostic Row -->
+<div class="row g-4 mb-4">
+    <!-- Main Gauge Score Panel -->
+    <div class="col-lg-4">
+        <div class="card glass-card h-100 p-4 text-center shadow-lg d-flex flex-column justify-content-center align-items-center">
+            <span class="text-muted font-outfit small text-uppercase tracking-wider mb-2">Virality Score</span>
+            
+            <!-- Circular Progress Indicator -->
+            <div class="score-circle-container mb-4">
+                <svg class="score-svg" viewBox="0 0 100 100">
+                    <circle class="score-track" cx="50" cy="50" r="40"></circle>
+                    <circle class="score-fill" cx="50" cy="50" r="40" style="stroke-dasharray: 251; stroke-dashoffset: {{ 251 - (251 * analysis.virality_score / 100) }}"></circle>
+                </svg>
+                <div class="score-value-overlay">
+                    <h1 class="display-3 font-outfit theme-text mb-0">{{ analysis.virality_score|round_value(1) }}</h1>
+                    <span class="text-muted small">/100</span>
+                </div>
+            </div>
+            
+            <!-- Badges -->
+            <h4 class="font-outfit theme-text mb-2">Class: 
+                <span class="badge {% if analysis.performance_class == 'Excellent' %}bg-success-glow{% elif analysis.performance_class == 'Good' %}bg-primary-glow{% elif analysis.performance_class == 'Average' %}bg-warning-glow{% else %}bg-danger-glow{% endif %}">
+                    {{ analysis.performance_class }}
+                </span>
+            </h4>
+            <p class="text-muted small mb-0"><i class="bi bi-shield-check text-info me-1"></i> Confidence Level: <b>{{ analysis.confidence }}%</b></p>
+        </div>
+    </div>
+    
+    <!-- Video Details & Metadata -->
+    <div class="col-lg-4 col-md-6">
+        <div class="card glass-card h-100 p-4 shadow-lg d-flex flex-column justify-content-between">
+            <div>
+                <h5 class="font-outfit theme-text mb-3">Specifications</h5>
+                <div class="position-relative mb-3 rounded overflow-hidden" style="height: 140px;">
+                    <img src="{{ analysis.thumbnail_path }}" class="w-100 h-100 object-fit-cover" alt="Thumbnail Image">
+                    <span class="badge bg-dark-glass position-absolute bottom-0 end-0 m-2">{{ analysis.duration|round_value(1) }}s</span>
+                </div>
+                
+                <table class="table table-dark table-borderless table-sm small mb-0">
+                    <tbody>
+                        <tr>
+                            <td class="text-muted py-1">Source type:</td>
+                            <td class="theme-text text-end py-1 fw-bold">{{ analysis.type|upper }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted py-1">File duration:</td>
+                            <td class="theme-text text-end py-1">{{ analysis.duration|round_value(1) }} seconds</td>
+                        </tr>
+                        {% if analysis.type == 'youtube' %}
+                            <tr>
+                                <td class="text-muted py-1">Uploader:</td>
+                                <td class="theme-text text-end py-1 text-truncate" style="max-width: 150px;">{{ analysis.metadata.uploader }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted py-1">Views:</td>
+                                <td class="theme-text text-end py-1">{{ analysis.metadata.views|format_number }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted py-1">Likes:</td>
+                                <td class="theme-text text-end py-1">{{ analysis.metadata.likes|format_number }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted py-1">Engagement Rate:</td>
+                                <td class="text-success text-end py-1 fw-bold">{{ analysis.metadata.metrics.engagement_rate }}%</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td class="text-muted py-1">Resolution:</td>
+                                <td class="theme-text text-end py-1">{{ analysis.features.width }} x {{ analysis.features.height }} px</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted py-1">Average FPS:</td>
+                                <td class="theme-text text-end py-1">{{ analysis.features.fps }} frames/s</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Dominant Colors -->
+            {% if analysis.features.dominant_colors %}
+            <div class="mt-3 pt-3 border-top border-light-subtle">
+                <span class="text-muted small d-block mb-2">Dominant Colors Palette:</span>
+                <div class="d-flex gap-2">
+                    {% for hex in analysis.features.dominant_colors %}
+                    <div class="color-swatch-badge d-flex align-items-center px-2 py-1 rounded border border-light-subtle" style="background-color: rgba(255,255,255,0.05);">
+                        <span class="color-swatch-dot me-2" style="background-color: {{ hex }}; width: 14px; height: 14px; display: inline-block; borderRadius: 50%;"></span>
+                        <code class="theme-text small text-uppercase" style="font-size: 0.75rem;">{{ hex }}</code>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Actionable Recommendations Card -->
+    <div class="col-lg-4 col-md-6">
+        <div class="card glass-card h-100 p-4 shadow-lg d-flex flex-column justify-content-between">
+            <div>
+                <h5 class="font-outfit theme-text mb-3">Key Recommendations</h5>
+                <div class="recommendations-scroll overflow-auto" style="max-height: 280px;">
+                    {% for rec in analysis.recommendations %}
+                    <div class="rec-item d-flex gap-3 mb-3 pb-3 border-bottom border-light-subtle last-no-border">
+                        <div class="rec-badge mt-1">
+                            {% if rec.severity == 'high' %}
+                                <i class="bi bi-exclamation-octagon-fill text-danger fs-5"></i>
+                            {% elif rec.severity == 'medium' %}
+                                <i class="bi bi-exclamation-triangle-fill text-warning fs-5"></i>
+                            {% else %}
+                                <i class="bi bi-info-circle-fill text-info fs-5"></i>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <h6 class="font-outfit theme-text mb-1">{{ rec.title }}</h6>
+                            <p class="text-muted small mb-0">{{ rec.description }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Charts and Visualization Section -->
+<div class="row g-4 mb-4">
+    <!-- Feature Radar Comparison -->
+    <div class="col-lg-6">
+        <div class="card glass-card p-4 shadow">
+            <h5 class="font-outfit theme-text mb-3">Audited Feature Vectors</h5>
+            <p class="text-muted small mb-4">This radar chart maps your video metrics (blue) against optimal benchmark guidelines (purple).</p>
+            <div style="height: 320px;">
+                <canvas id="radarChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Feature Comparison Bar Graph -->
+    <div class="col-lg-6">
+        <div class="card glass-card p-4 shadow">
+            <h5 class="font-outfit theme-text mb-3">Benchmark Performance Ratios</h5>
+            <p class="text-muted small mb-4">Comparing normalized video features against virality benchmarks. Higher values indicate proximity to target values.</p>
+            <div style="height: 320px;">
+                <canvas id="barChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- All Feature Metrics Cards -->
+<section class="mb-5">
+    <h4 class="font-outfit theme-text mb-4"><i class="bi bi-cpu text-primary me-2"></i>Detailed Visual Diagnostics</h4>
+    
+    <div class="row row-cols-2 row-cols-md-4 g-3">
+        <!-- Duration -->
+        <div class="col">
+            <div class="card glass-card text-center p-3 h-100">
+                <span class="text-muted small mb-1">Duration</span>
+                <h4 class="font-outfit theme-text mb-1">{{ analysis.features.duration }}s</h4>
+                <div class="text-muted small">Optimal: 15s - 60s</div>
+            </div>
+        </div>
+        
+        <!-- Brightness -->
+        <div class="col">
+            <div class="card glass-card text-center p-3 h-100">
+                <span class="text-muted small mb-1">Brightness</span>
+                <h4 class="font-outfit theme-text mb-1">{{ analysis.features.brightness }}</h4>
+                <div class="text-muted small">Target: 100 - 150</div>
+            </div>
+        </div>
+        
+        <!-- Contrast -->
+        <div class="col">
+            <div class="card glass-card text-center p-3 h-100">
+                <span class="text-muted small mb-1">Contrast</span>
+                <h4 class="font-outfit theme-text mb-1">{{ analysis.features.contrast }}</h4>
+                <div class="text-muted small">Target: 60 - 120</div>
+            </div>
+        </div>
+        
+        <!-- Motion Score -->
+        <div class="col">
+            <div class="card glass-card text-center p-3 h-100">
+                <span class="text-muted small mb-1">Motion Score</span>
+                <h4 class="font-outfit theme-text mb-1">{{ analysis.features.motion_score }}</h4>
+                <div class="text-muted small">Target: 2.0 - 8.0</div>
+            </div>
+        </div>
+        
+        <!-- Scene Cut Score -->
+        <div class="col">
+            <div class="card glass-card text-center p-3 h-100">
+                <span class="text-muted small mb-1">Cuts / Sec</span>
+                <h4 class="font-outfit theme-text mb-1">{{ analysis.features.scene_change_score }}</h4>
+                <div class="text-muted small">Target: 0.1 - 0.3</div>
+            </div>
+        </div>
+        
+        <!-- Sharpness -->
+        <div class="col">
+            <div class="card glass-card text-center p-3 h-100">
+                <span class="text-muted small mb-1">Sharpness</span>
+                <h4 class="font-outfit theme-text mb-1">{{ analysis.features.sharpness }}</h4>
+                <div class="text-muted small">Target: > 150.0</div>
+            </div>
+        </div>
+        
+        <!-- Emotion Score -->
+        <div class="col">
+            <div class="card glass-card text-center p-3 h-100">
+                <span class="text-muted small mb-1">Emotion Score</span>
+                <h4 class="font-outfit theme-text mb-1">{{ analysis.features.emotion_score }}</h4>
+                <div class="text-muted small">Target: > 50.0</div>
+            </div>
+        </div>
+        
+        <!-- Audio Energy -->
+        <div class="col">
+            <div class="card glass-card text-center p-3 h-100">
+                <span class="text-muted small mb-1">Audio Energy</span>
+                <h4 class="font-outfit theme-text mb-1">{{ analysis.features.audio_energy }}</h4>
+                <div class="text-muted small">Target: 55 - 80</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Comparison Promotion Banner -->
+<section class="py-4 my-4 bg-glass-strip rounded-4 p-4 text-center">
+    <h5 class="font-outfit theme-text mb-2">Want to compare this video side-by-side with another?</h5>
+    <p class="text-muted small mb-3">Load multiple runs into our Comparison Dashboard to compare brightness offsets, motion variance and recommendations.</p>
+    <a href="{{ url_for('main.compare', id1=analysis.id) }}" class="btn btn-outline-primary px-4 py-2 font-outfit btn-sm">
+        Open Comparison Dashboard <i class="bi bi-grid-1x2 ms-1"></i>
+    </a>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Inject features values as JSON objects for Chart.js
+    const features = {{ analysis.features|tojson }};
+    const title = "{{ analysis.title }}";
+</script>
+<script src="/static/js/result_charts.js"></script>
+{% endblock %}

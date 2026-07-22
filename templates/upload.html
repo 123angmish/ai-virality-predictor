@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+
+{% block title %}Analyze Video File - ViralityAI{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center my-4">
+    <div class="col-lg-8">
+
+        <div class="text-center mb-4">
+            <h2 class="font-outfit theme-text mb-2">Local Video Analyzer</h2>
+            <p class="theme-text-secondary">
+                Drag & drop your video file below. We support MP4, AVI, MOV, and MKV files up to 500MB.
+            </p>
+        </div>
+
+        <!-- Upload Card -->
+        <div class="card glass-card upload-container text-center p-5 mb-4 shadow-lg border-2 border-dashed" id="dropZone">
+
+            <input type="file"
+                   id="videoFile"
+                   class="d-none"
+                   accept=".mp4,.avi,.mov,.mkv">
+
+            <div class="upload-icon-container mb-4 mx-auto">
+                <i class="bi bi-cloud-arrow-up display-2 text-primary"></i>
+            </div>
+
+            <h4 class="font-outfit theme-text mb-2">
+                Drag and drop video here
+            </h4>
+
+            <p class="theme-text-secondary small mb-4">
+                or click to browse files on your computer
+            </p>
+
+            <button class="btn btn-primary-gradient px-4 py-2"
+                    onclick="document.getElementById('videoFile').click()">
+
+                Select Video File
+
+            </button>
+
+            <div class="mt-4 theme-text-secondary small">
+                <i class="bi bi-shield-fill-check text-success me-1"></i>
+                Your video files are processed locally and securely deleted immediately after analysis.
+            </div>
+
+        </div>
+
+        <!-- Progress Card -->
+
+        <div class="card glass-card p-4 mb-4 shadow d-none" id="progressCard">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+
+                <h5 class="font-outfit theme-text mb-0"
+                    id="progressStatus">
+
+                    Uploading file...
+
+                </h5>
+
+                <span class="badge bg-primary-glow"
+                      id="progressPercent">
+
+                    0%
+
+                </span>
+
+            </div>
+
+            <div class="progress mb-4" style="height:12px;">
+
+                <div class="progress-bar progress-bar-striped progress-bar-animated"
+
+                     id="progressBar"
+
+                     role="progressbar"
+
+                     style="width:0%;">
+
+                </div>
+
+            </div>
+
+            <div class="d-flex justify-content-between theme-text-secondary small mb-4">
+
+                <span id="progressBytes">
+                    0 MB of 0 MB
+                </span>
+
+                <span id="progressSpeed">
+                    0 KB/s
+                </span>
+
+            </div>
+
+            <div class="border-top pt-4 d-none"
+                 id="analysisSteps">
+
+                <h6 class="font-outfit theme-text mb-3">
+
+                    <i class="bi bi-cpu-fill text-warning me-2"></i>
+
+                    AI Processing Pipeline
+
+                </h6>
+
+                <!-- STEP 1 -->
+
+                <div class="analysis-step d-flex align-items-center mb-3" id="step-upload">
+
+                    <i class="bi bi-check-circle-fill text-success me-3 fs-5 step-icon-done"></i>
+
+                    <i class="bi bi-circle theme-text-secondary me-3 fs-5 step-icon-todo d-none"></i>
+
+                    <div class="spinner-border spinner-border-sm text-primary me-3 step-icon-loading d-none"></div>
+
+                    <span class="theme-text small">
+
+                        Video Upload and Encryption Check
+
+                    </span>
+
+                </div>
+
+                <!-- STEP 2 -->
+
+                <div class="analysis-step d-flex align-items-center mb-3" id="step-opencv">
+
+                    <i class="bi bi-check-circle-fill text-success me-3 fs-5 step-icon-done d-none"></i>
+
+                    <i class="bi bi-circle theme-text-secondary me-3 fs-5 step-icon-todo"></i>
+
+                    <div class="spinner-border spinner-border-sm text-primary me-3 step-icon-loading d-none"></div>
+
+                    <span class="theme-text small">
+
+                        OpenCV Frame Metrics & Contrast Extraction
+
+                    </span>
+
+                </div>
+
+                <!-- STEP 3 -->
+
+                <div class="analysis-step d-flex align-items-center mb-3" id="step-motion">
+
+                    <i class="bi bi-check-circle-fill text-success me-3 fs-5 step-icon-done d-none"></i>
+
+                    <i class="bi bi-circle theme-text-secondary me-3 fs-5 step-icon-todo"></i>
+
+                    <div class="spinner-border spinner-border-sm text-primary me-3 step-icon-loading d-none"></div>
+
+                    <span class="theme-text small">
+
+                        Scene Cut Boundaries & Motion Energy Audits
+
+                    </span>
+
+                </div>
+
+                <!-- STEP 4 -->
+
+                <div class="analysis-step d-flex align-items-center mb-3" id="step-faces">
+
+                    <i class="bi bi-check-circle-fill text-success me-3 fs-5 step-icon-done d-none"></i>
+
+                    <i class="bi bi-circle theme-text-secondary me-3 fs-5 step-icon-todo"></i>
+
+                    <div class="spinner-border spinner-border-sm text-primary me-3 step-icon-loading d-none"></div>
+
+                    <span class="theme-text small">
+
+                        Haar Cascade Facial Presence & Emotion Tracking
+
+                    </span>
+
+                </div>
+
+                <!-- STEP 5 -->
+
+                <div class="analysis-step d-flex align-items-center" id="step-predict">
+
+                    <i class="bi bi-check-circle-fill text-success me-3 fs-5 step-icon-done d-none"></i>
+
+                    <i class="bi bi-circle theme-text-secondary me-3 fs-5 step-icon-todo"></i>
+
+                    <div class="spinner-border spinner-border-sm text-primary me-3 step-icon-loading d-none"></div>
+
+                    <span class="theme-text small">
+
+                        XGBoost Virality Classifier Scoring
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Error -->
+
+        <div class="alert alert-danger glass-card border-danger d-none p-3 shadow-lg"
+             id="errorBox">
+
+            <div class="d-flex align-items-start">
+
+                <i class="bi bi-exclamation-triangle-fill fs-4 text-danger me-3"></i>
+
+                <div>
+
+                    <h6 class="alert-heading mb-1">
+
+                        Upload Failed
+
+                    </h6>
+
+                    <p class="theme-text-secondary small mb-0"
+                       id="errorText">
+
+                        The selected file is not supported.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="/static/js/upload.js"></script>
+{% endblock %}

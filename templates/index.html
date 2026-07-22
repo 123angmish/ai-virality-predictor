@@ -1,0 +1,343 @@
+{% extends 'base.html' %}
+
+{% block title %}ViralityAI - Predictive Video Analytics & ML Scoring{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section text-center py-5 my-3 position-relative">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <span class="badge bg-primary-glow font-outfit mb-3 py-2 px-3 text-uppercase tracking-wider">Now Live: YouTube Audit Support</span>
+            <h1 class="hero-title font-outfit mb-3">
+                Predict the <span class="gradient-text">Viral Power</span> of Your Videos Before Publishing
+            </h1>
+            <p class="hero-subtitle text-muted mx-auto mb-5">
+                Upload raw videos or analyze live YouTube URLs. Our algorithm uses OpenCV Computer Vision to extract visual metrics, facial expressions, and motion cues, scoring them with an XGBoost ML model.
+            </p>
+            
+            <!-- Quick Analyzer Card (Glassmorphism) -->
+            <div class="card glass-card analyzer-card mx-auto mb-5 p-4 shadow-lg">
+                <div class="card-body p-2">
+                    <ul class="nav nav-pills nav-fill mb-4 justify-content-center" id="analyzerTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a href="{{ url_for('main.upload') }}" class="nav-link active py-2 px-4 font-outfit">
+                                <i class="bi bi-file-earmark-arrow-up me-2"></i>Upload File (MP4/MOV)
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link py-2 px-4 font-outfit" id="youtube-tab" data-bs-toggle="tab" data-bs-target="#youtube-panel" type="button" role="tab">
+                                <i class="bi bi-youtube me-2"></i>Analyze YouTube URL
+                            </button>
+                        </li>
+                    </ul>
+                    
+                    <div class="tab-content" id="analyzerTabContent">
+                        <!-- Direct Link to Upload Page info -->
+                        <div class="tab-pane fade show active" id="upload-panel" role="tabpanel">
+                            <div class="p-3 text-center">
+                                <p class="text-muted mb-3">Analyze local video files using frame-by-frame computer vision extraction.</p>
+                                <a href="{{ url_for('main.upload') }}" class="btn btn-primary-gradient btn-lg px-5 py-3 font-outfit shadow-sm">
+                                    Open File Analyzer <i class="bi bi-arrow-right-short ms-1"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- YouTube URL Analyzer Form -->
+                        <div class="tab-pane fade" id="youtube-panel" role="tabpanel">
+                            <form id="urlAnalyzeForm" class="p-2">
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text glass-input-addon"><i class="bi bi-link-45deg text-muted"></i></span>
+                                    <input type="url" id="youtubeUrl" class="form-control glass-input" placeholder="Paste YouTube Video URL (e.g. https://www.youtube.com/watch?v=...)" required>
+                                    <button class="btn btn-primary-gradient px-4 font-outfit" type="submit">
+                                        Analyze URL <i class="bi bi-cpu ms-2"></i>
+                                    </button>
+                                </div>
+                                <div class="form-text text-muted text-start mt-2 ms-2">
+                                    <i class="bi bi-info-circle me-1"></i> Supports standard YouTube video URLs and YouTube Shorts.
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Processing / Loading Modal -->
+<div class="modal fade" id="loadingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass-card border-light shadow-2xl p-4">
+            <div class="modal-body text-center py-5">
+                <div class="spinner-container mb-4">
+                    <div class="spinner-glow"></div>
+                    <div class="spinner-border text-primary" style="width: 4rem; height: 4rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <h4 class="font-outfit text-light mb-2" id="loadingTitle">Running Neural Diagnostics...</h4>
+                <p class="text-muted mb-0" id="loadingText">Extracting video metadata, comments, and engagement analytics via yt-dlp. Please hold.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<section class="py-5 my-4">
+    <div class="text-center mb-5">
+        <span class="badge bg-secondary-glow font-outfit mb-2 py-1 px-3">Powerful Capabilities</span>
+        <h2 class="section-title font-outfit">Built with Multi-Modal AI</h2>
+        <p class="text-muted max-w-2xl mx-auto">We process visual dynamics, pacing architectures, and social signal patterns to score virality.</p>
+    </div>
+    
+    <div class="row g-4">
+        <!-- Feature 1 -->
+        <div class="col-md-4">
+            <div class="card glass-card h-100 hover-translate p-3">
+                <div class="card-body">
+                    <div class="feature-icon mb-4">
+                        <i class="bi bi-eye-fill"></i>
+                    </div>
+                    <h5 class="card-title font-outfit mb-3">Computer Vision Metrics</h5>
+                    <p class="card-text text-muted">Leverages OpenCV algorithms to compute brightness stability, micro-motion energy ratios, and high-frequency contrast across frames.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Feature 2 -->
+        <div class="col-md-4">
+            <div class="card glass-card h-100 hover-translate p-3">
+                <div class="card-body">
+                    <div class="feature-icon mb-4">
+                        <i class="bi bi-emoji-laughing-fill"></i>
+                    </div>
+                    <h5 class="card-title font-outfit mb-3">Facial & Smile Auditing</h5>
+                    <p class="card-text text-muted">Detects human faces and tracks smile frequency using cascading classifiers to compute overall speaker dynamic and emotional hooks.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Feature 3 -->
+        <div class="col-md-4">
+            <div class="card glass-card h-100 hover-translate p-3">
+                <div class="card-body">
+                    <div class="feature-icon mb-4">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </div>
+                    <h5 class="card-title font-outfit mb-3">XGBoost ML Scoring</h5>
+                    <p class="card-text text-muted">Evaluates 17+ structural and visual features through a trained gradient-boosted decision tree model optimized for audience retention.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5 my-4 bg-glass-strip rounded-4 p-5 position-relative overflow-hidden">
+    <div class="row align-items-center gy-4">
+        <div class="col-lg-5">
+            <span class="badge bg-primary-glow font-outfit mb-2 py-1 px-3">Simple Workflow</span>
+            <h2 class="font-outfit text-light mb-3">How it predicts virality</h2>
+            <p class="text-muted mb-4">Our pipeline transforms unstructured pixel arrays and metadata numbers into clear, structured suggestions.</p>
+            <div class="d-flex align-items-center mb-3">
+                <div class="step-num me-3">1</div>
+                <div class="step-content">
+                    <h6 class="text-light mb-0 font-outfit">Upload or paste URL</h6>
+                    <span class="text-muted small">Input video file or YouTube URL.</span>
+                </div>
+            </div>
+            <div class="d-flex align-items-center mb-3">
+                <div class="step-num me-3">2</div>
+                <div class="step-content">
+                    <h6 class="text-light mb-0 font-outfit">OpenCV Feature Extraction</h6>
+                    <span class="text-muted small">We analyze motion, cuts, colors, and faces.</span>
+                </div>
+            </div>
+            <div class="d-flex align-items-center">
+                <div class="step-num me-3">3</div>
+                <div class="step-content">
+                    <h6 class="text-light mb-0 font-outfit">Get Suggestions</h6>
+                    <span class="text-muted small">Download PDF report with structural feedback.</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7 text-center">
+            <!-- Simulated Interface Graphics -->
+            <div class="ui-mockup glass-card p-3 shadow-lg">
+                <div class="d-flex justify-content-between align-items-center border-bottom border-light pb-2 mb-3">
+                    <div class="dots d-flex">
+                        <span class="dot bg-danger me-1"></span>
+                        <span class="dot bg-warning me-1"></span>
+                        <span class="dot bg-success"></span>
+                    </div>
+                    <span class="text-muted small font-outfit">ViralityAI Diagnostics</span>
+                </div>
+                <div class="row g-2">
+                    <div class="col-6">
+                        <div class="bg-dark-card rounded p-3 text-start">
+                            <span class="text-muted small d-block">Virality Probability</span>
+                            <h3 class="text-success font-outfit mb-1">87.4%</h3>
+                            <div class="progress progress-xs bg-dark">
+                                <div class="progress-bar bg-success" style="width: 87%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="bg-dark-card rounded p-3 text-start">
+                            <span class="text-muted small d-block">Hook Quality</span>
+                            <h3 class="text-warning font-outfit mb-1">Excellent</h3>
+                            <div class="progress progress-xs bg-dark">
+                                <div class="progress-bar bg-warning" style="width: 92%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-dark-card rounded p-3 text-start mt-2">
+                    <span class="text-light font-outfit d-block mb-1"><i class="bi bi-lightbulb-fill text-warning me-1"></i> Recommendation</span>
+                    <p class="text-muted small mb-0">Increase scene brightness in the middle third of the video. Dark frames reduce viewer retention rate.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Recent Analyses Section -->
+{% if recent %}
+<section class="py-5 my-4">
+    <div class="d-flex justify-content-between align-items-end mb-4">
+        <div>
+            <h3 class="font-outfit text-light mb-1">Recent Analyses</h3>
+            <p class="text-muted mb-0">Audited videos in our global database.</p>
+        </div>
+        <a href="{{ url_for('main.history') }}" class="btn btn-outline-light px-3 py-2 font-outfit">
+            View All History <i class="bi bi-arrow-right-short ms-1"></i>
+        </a>
+    </div>
+    
+    <div class="row g-4">
+        {% for item in recent %}
+        <div class="col-md-4">
+            <div class="card glass-card history-card h-100 hover-translate">
+                <!-- Thumbnail -->
+                <div class="position-relative overflow-hidden card-img-wrapper" style="height: 160px;">
+                    {% if item.type == 'youtube' %}
+                        <img src="{{ item.thumbnail_path }}" class="card-img-top w-100 h-100 object-fit-cover" alt="Video Thumbnail">
+                    {% else %}
+                        <img src="{{ item.thumbnail_path }}" class="card-img-top w-100 h-100 object-fit-cover" alt="Video Thumbnail">
+                    {% endif %}
+                    <span class="badge bg-dark-glass position-absolute bottom-0 right-0 m-2 font-outfit text-light">
+                        {{ item.duration|round_value(1) }}s
+                    </span>
+                    <span class="badge position-absolute top-0 start-0 m-2 font-outfit {% if item.type == 'youtube' %}bg-danger{% else %}bg-primary{% endif %}">
+                        {{ item.type|upper }}
+                    </span>
+                </div>
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <h6 class="card-title text-truncate font-outfit text-light mb-2" title="{{ item.title }}">{{ item.title }}</h6>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-muted small"><i class="bi bi-clock me-1"></i>{{ item.created_at.split(' ')[0] }}</span>
+                            <span class="badge {% if item.performance_class == 'Excellent' %}bg-success-glow{% elif item.performance_class == 'Good' %}bg-primary-glow{% elif item.performance_class == 'Average' %}bg-warning-glow{% else %}bg-danger-glow{% endif %}">
+                                {{ item.performance_class }}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center pt-2 border-top border-light-subtle">
+                        <div class="score-display">
+                            <span class="text-muted small d-block">Score</span>
+                            <h5 class="text-light font-outfit mb-0">{{ item.virality_score }}/100</h5>
+                        </div>
+                        <a href="{{ url_for('main.result', analysis_id=item.id) }}" class="btn btn-sm btn-primary-gradient px-3 py-2 font-outfit">
+                            Results <i class="bi bi-chevron-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA Section -->
+<section class="py-5 text-center my-5 bg-gradient-glow rounded-4 p-5">
+    <h2 class="font-outfit text-light mb-3">Ready to Maximize Audience Reach?</h2>
+    <p class="text-muted max-w-2xl mx-auto mb-4">Run an absolute audit on your footage file or inspect your competitor's YouTube viral content in seconds.</p>
+    <div class="d-flex justify-content-center gap-3">
+        <a href="{{ url_for('main.upload') }}" class="btn btn-primary-gradient btn-lg px-4 py-3 font-outfit">
+            Analyze Local Video <i class="bi bi-file-earmark-play-fill ms-1"></i>
+        </a>
+        <a href="{{ url_for('main.compare') }}" class="btn btn-outline-light btn-lg px-4 py-3 font-outfit">
+            Compare Dashboard <i class="bi bi-grid-1x2-fill ms-1"></i>
+        </a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const form = document.getElementById("urlAnalyzeForm");
+    const loadingModalEl = document.getElementById("loadingModal");
+    const loadingModal = new bootstrap.Modal(loadingModalEl);
+    
+    const loadingTitle = document.getElementById("loadingTitle");
+    const loadingText = document.getElementById("loadingText");
+    
+    if (form) {
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+            const urlInput = document.getElementById("youtubeUrl").value.strip ? document.getElementById("youtubeUrl").value.strip() : document.getElementById("youtubeUrl").value;
+            
+            if (!urlInput) return;
+            
+            // Show loading overlay
+            loadingTitle.innerText = "Connecting to YouTube...";
+            loadingText.innerText = "Extracting video metadata, comments, and engagement analytics via yt-dlp. Please hold.";
+            loadingModal.show();
+            
+            // Periodically cycle messages to show state
+            const messages = [
+                "Downloading video metadata structures...",
+                "Running XGBoost models against engagement ratios...",
+                "Mapping historical metrics benchmarks...",
+                "Finalizing score vector coordinates..."
+            ];
+            let msgIdx = 0;
+            const timer = setInterval(() => {
+                if (msgIdx < messages.length) {
+                    loadingText.innerText = messages[msgIdx++];
+                }
+            }, 3000);
+            
+            // Call API
+            fetch("{{ url_for('main.analyze_url') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ url: urlInput })
+            })
+            .then(res => res.json())
+            .then(data => {
+                clearInterval(timer);
+                if (data.success) {
+                    loadingTitle.innerText = "Processing Successful!";
+                    loadingText.innerText = "Redirecting to your analysis dashboard...";
+                    setTimeout(() => {
+                        window.location.href = data.redirect_url;
+                    }, 800);
+                } else {
+                    loadingModal.hide();
+                    alert("Error: " + (data.error || "An unknown error occurred."));
+                }
+            })
+            .catch(err => {
+                clearInterval(timer);
+                loadingModal.hide();
+                alert("Network error: Could not complete URL analysis.");
+            });
+        });
+    }
+});
+</script>
+{% endblock %}

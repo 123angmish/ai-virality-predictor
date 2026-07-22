@@ -1,0 +1,412 @@
+/* CSS Variables for Theme Configuration */
+:root {
+    --bg-base: #f8fafc;
+    --bg-card: rgba(255, 255, 255, 0.7);
+    --border-color: rgba(0, 0, 0, 0.06);
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --primary-color: #4f46e5;
+    --primary-glow: rgba(79, 70, 229, 0.1);
+    --secondary-color: #f1f5f9;
+    --accent-color: #059669;
+    --accent-glow: rgba(5, 150, 105, 0.1);
+    --card-shadow: rgba(0, 0, 0, 0.05);
+    --input-bg: rgba(255, 255, 255, 0.8);
+    --navbar-bg: rgba(248, 250, 252, 0.8);
+}
+
+/* Global Reset & Base Styling */
+* {
+    box-sizing: border-box;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.font-outfit {
+    font-family: 'Outfit', sans-serif;
+}
+
+/* Radial Blurred Background Blobs */
+.glow-bg {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    filter: blur(140px);
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.35;
+}
+
+.glow-primary {
+    background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+    top: -10%;
+    left: -10%;
+}
+
+.glow-secondary {
+    background: radial-gradient(circle, var(--accent-color) 0%, transparent 70%);
+    bottom: 10%;
+    right: -10%;
+}
+
+/* Navbar Custom Styling */
+.navbar {
+    background-color: var(--navbar-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 0;
+    z-index: 1000;
+}
+
+.brand-text {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    font-size: 1.45rem;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+}
+
+.brand-icon {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+.brand-accent {
+    color: var(--primary-color);
+}
+
+.navbar-nav .nav-link {
+    color: var(--text-secondary);
+    font-weight: 500;
+    padding: 0.5rem 1.25rem !important;
+    border-radius: 30px;
+    transition: all 0.2s ease;
+}
+
+.navbar-nav .nav-link:hover, 
+.navbar-nav .nav-link.active {
+    color: var(--text-primary);
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+:root .navbar-nav .nav-link:hover, 
+:root .navbar-nav .nav-link.active {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* Glassmorphism Cards */
+.glass-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px 0 var(--card-shadow);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+}
+
+.hover-translate:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+:root .hover-translate:hover {
+    border-color: rgba(0, 0, 0, 0.12);
+}
+
+/* Text Gradients */
+.gradient-text {
+    background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #e066ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.btn-primary-gradient {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    border: none;
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: 12px;
+    padding: 0.75rem 1.75rem;
+    transition: filter 0.2s ease, transform 0.1s ease;
+}
+
+.btn-primary-gradient:hover {
+    filter: brightness(1.15);
+    color: #ffffff;
+}
+
+.btn-primary-gradient:active {
+    transform: scale(0.98);
+}
+
+/* Badges and indicators */
+.bg-primary-glow {
+    background-color: var(--primary-glow);
+    color: #818cf8;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.bg-secondary-glow {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.bg-success-glow {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.bg-warning-glow {
+    background-color: rgba(245, 158, 11, 0.15);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.bg-danger-glow {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Input Fields Glassmorphism */
+.glass-input {
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary) !important;
+    border-radius: 12px;
+    padding: 0.75rem 1.25rem;
+}
+
+.glass-input:focus {
+    background-color: var(--input-bg);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+}
+
+.glass-input-addon {
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-right: none;
+    border-radius: 12px 0 0 12px;
+}
+
+.glass-input-addon + .glass-input {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+/* Drag and Drop Zone */
+.upload-container {
+    border: 2px dashed var(--border-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.upload-container:hover, .upload-container.dragover {
+    border-color: var(--primary-color);
+    background-color: rgba(99, 102, 241, 0.05);
+}
+
+.upload-icon-container {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background-color: var(--primary-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.upload-container:hover .upload-icon-container {
+    transform: scale(1.1);
+}
+
+/* Circular Gauge Overlay */
+.score-circle-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+.score-svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.score-track {
+    fill: none;
+    stroke: var(--border-color);
+    stroke-width: 8;
+}
+
+.score-fill {
+    fill: none;
+    stroke: url(#scoreGradient);
+    /* In case SVG gradients are tricky, default fallback */
+    stroke: var(--primary-color);
+    stroke-width: 8;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s ease-in-out;
+}
+
+.score-value-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+/* Custom Table Layout */
+.table-dark {
+    background-color: transparent !important;
+}
+
+.table-dark tbody tr {
+    background-color: transparent !important;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+:root .table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.02) !important;
+}
+
+/* Spinner Custom Glow */
+.spinner-container {
+    position: relative;
+    display: inline-block;
+}
+
+.spinner-glow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--primary-color);
+    filter: blur(25px);
+    border-radius: 50%;
+    opacity: 0.45;
+}
+
+/* Footer elements */
+.footer {
+    background-color: rgba(0,0,0,0.2);
+    border-top: 1px solid var(--border-color);
+    margin-top: auto;
+}
+
+:root .footer {
+    background-color: rgba(0,0,0,0.02);
+}
+
+.footer-divider {
+    border-color: var(--border-color);
+}
+
+.footer-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    display: block;
+    margin-bottom: 0.5rem;
+    transition: color 0.2s ease;
+}
+
+.footer-links a:hover {
+    color: var(--text-primary);
+}
+
+.disabled-link {
+    cursor: default;
+}
+
+.step-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ui-mockup {
+    transform: perspective(1000px) rotateY(-10deg) rotateX(10deg);
+    box-shadow: 20px 20px 60px rgba(0,0,0,0.5);
+    border-radius: 12px;
+}
+
+.bg-dark-card {
+    background-color: rgba(0,0,0,0.3);
+}
+
+:root .bg-dark-card {
+    background-color: rgba(0,0,0,0.05);
+}
+
+/* Scroll Custom Styling */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+.theme-text {
+    color: var(--text-primary) !important;
+}
+
+.theme-text-secondary {
+    color: var(--text-secondary) !important;
+}
+.theme-text {
+    color: #0f172a !important;
+}
+
+.theme-text-secondary {
+    color: #64748b !important;
+}
+
+.progress {
+    background: #e5e7eb !important;
+}
+
+.progress-bar {
+    background: linear-gradient(90deg,#4f46e5,#6366f1) !important;
+}
+
+.glass-card {
+    color: #0f172a;
+}

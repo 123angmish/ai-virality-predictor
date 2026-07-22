@@ -1,0 +1,356 @@
+{% extends 'base.html' %}
+
+{% block title %}Comparison Dashboard - ViralityAI{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h2 class="font-outfit text-light mb-1">Comparison Dashboard</h2>
+    <p class="text-muted">Select two analysis reports from history to run a side-by-side audit.</p>
+</div>
+
+<!-- Selection Interface -->
+<div class="card glass-card p-4 shadow-lg mb-4">
+    <div class="row g-4 align-items-end">
+        <!-- Video 1 Selector -->
+        <div class="col-md-5">
+            <label class="form-label text-muted small font-outfit text-uppercase">Video Report 1</label>
+            <select class="form-select glass-input font-outfit" id="selectVideo1">
+                <option value="" disabled selected>Select first video...</option>
+                {% for item in analyses %}
+                    <option value="{{ item.id }}" {% if request.args.get('id1')|int == item.id %}selected{% endif %}>
+                        #{{ item.id }} - {{ item.title }} ({{ item.virality_score }}/100)
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <!-- VS Spacer -->
+        <div class="col-md-2 text-center py-2">
+            <span class="badge bg-secondary-glow font-outfit fs-5 px-3 py-2">VS</span>
+        </div>
+        
+        <!-- Video 2 Selector -->
+        <div class="col-md-5">
+            <label class="form-label text-muted small font-outfit text-uppercase">Video Report 2</label>
+            <select class="form-select glass-input font-outfit" id="selectVideo2">
+                <option value="" disabled selected>Select second video...</option>
+                {% for item in analyses %}
+                    <option value="{{ item.id }}" {% if request.args.get('id2')|int == item.id %}selected{% endif %}>
+                        #{{ item.id }} - {{ item.title }} ({{ item.virality_score }}/100)
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- Comparison Results (Rendered via AJAX dynamically) -->
+<div id="comparisonContainer" class="d-none">
+    <!-- Score Comparison Cards -->
+    <div class="row g-4 mb-4">
+        <!-- Video 1 Summary Card -->
+        <div class="col-md-6">
+            <div class="card glass-card p-4 text-center border-primary shadow" id="v1-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="badge bg-primary">Video 1</span>
+                    <span class="badge bg-dark-glass" id="v1-type">UPLOAD</span>
+                </div>
+                <h5 class="text-light text-truncate font-outfit mb-3" id="v1-title">Title 1</h5>
+                
+                <div class="row align-items-center">
+                    <div class="col-6 border-end border-light-subtle">
+                        <span class="text-muted small d-block">Virality Score</span>
+                        <h2 class="display-5 font-outfit text-primary fw-bold mb-0" id="v1-score">80.0</h2>
+                    </div>
+                    <div class="col-6">
+                        <span class="text-muted small d-block">Class / Confidence</span>
+                        <h4 class="font-outfit text-light mb-1" id="v1-class">Excellent</h4>
+                        <span class="text-muted small" id="v1-conf">Confidence: 95%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Video 2 Summary Card -->
+        <div class="col-md-6">
+            <div class="card glass-card p-4 text-center border-success shadow" id="v2-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="badge bg-success">Video 2</span>
+                    <span class="badge bg-dark-glass" id="v2-type">YOUTUBE</span>
+                </div>
+                <h5 class="text-light text-truncate font-outfit mb-3" id="v2-title">Title 2</h5>
+                
+                <div class="row align-items-center">
+                    <div class="col-6 border-end border-light-subtle">
+                        <span class="text-muted small d-block">Virality Score</span>
+                        <h2 class="display-5 font-outfit text-success fw-bold mb-0" id="v2-score">85.0</h2>
+                    </div>
+                    <div class="col-6">
+                        <span class="text-muted small d-block">Class / Confidence</span>
+                        <h4 class="font-outfit text-light mb-1" id="v2-class">Excellent</h4>
+                        <span class="text-muted small" id="v2-conf">Confidence: 92%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comparison Chart -->
+    <div class="card glass-card p-4 mb-4 shadow">
+        <h5 class="font-outfit text-light mb-3">Feature Comparison Vector</h5>
+        <div style="height: 340px;">
+            <canvas id="comparisonChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Comparative Table -->
+    <div class="card glass-card p-4 mb-4 shadow">
+        <h5 class="font-outfit text-light mb-3">Side-by-Side Audit Details</h5>
+        <div class="table-responsive">
+            <table class="table table-dark table-striped align-middle mb-0">
+                <thead>
+                    <tr class="border-light-subtle">
+                        <th>Feature Metric</th>
+                        <th class="text-primary font-outfit" id="tbl-v1-name">Video 1</th>
+                        <th class="text-success font-outfit" id="tbl-v2-name">Video 2</th>
+                        <th>Target Benchmarks</th>
+                    </tr>
+                </thead>
+                <tbody id="comparisonTableBody">
+                    <!-- Loaded dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Side-by-Side Recommendations -->
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card glass-card p-4 shadow">
+                <h6 class="font-outfit text-primary mb-3"><i class="bi bi-lightbulb-fill me-2"></i>Video 1 Action Steps</h6>
+                <ul class="list-group list-group-flush bg-transparent" id="v1-recs">
+                    <!-- Dynamic -->
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card glass-card p-4 shadow">
+                <h6 class="font-outfit text-success mb-3"><i class="bi bi-lightbulb-fill me-2"></i>Video 2 Action Steps</h6>
+                <ul class="list-group list-group-flush bg-transparent" id="v2-recs">
+                    <!-- Dynamic -->
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Empty state overlay -->
+<div class="text-center py-5 glass-card p-5 shadow my-4" id="compareEmptyState">
+    <i class="bi bi-arrow-left-right display-3 text-muted mb-3 d-block"></i>
+    <h5 class="text-light font-outfit">Select two reports to compare</h5>
+    <p class="text-muted mb-0">Use the selection inputs at the top of the page to load video models side-by-side.</p>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const s1 = document.getElementById("selectVideo1");
+    const s2 = document.getElementById("selectVideo2");
+    
+    let chartInstance = null;
+    
+    function triggerComparison() {
+        const id1 = s1.value;
+        const id2 = s2.value;
+        
+        if (!id1 || !id2) return;
+        
+        // Call API
+        fetch(`/compare-data?id1=${id1}&id2=${id2}`)
+        .then(res => res.json())
+        .then(data => {
+            if (!data.success) {
+                alert("Error: " + data.error);
+                return;
+            }
+            
+            // Show comparative layout
+            document.getElementById("compareEmptyState").classList.add("d-none");
+            document.getElementById("comparisonContainer").classList.remove("d-none");
+            
+            const a1 = data.analysis1;
+            const a2 = data.analysis2;
+            
+            // Populate basic info
+            document.getElementById("v1-title").innerText = a1.title;
+            document.getElementById("v1-score").innerText = a1.virality_score;
+            document.getElementById("v1-class").innerText = a1.performance_class;
+            document.getElementById("v1-conf").innerText = `Confidence: ${a1.confidence}%`;
+            document.getElementById("v1-type").innerText = a1.type.toUpperCase();
+            
+            document.getElementById("v2-title").innerText = a2.title;
+            document.getElementById("v2-score").innerText = a2.virality_score;
+            document.getElementById("v2-class").innerText = a2.performance_class;
+            document.getElementById("v2-conf").innerText = `Confidence: ${a2.confidence}%`;
+            document.getElementById("v2-type").innerText = a2.type.toUpperCase();
+            
+            document.getElementById("tbl-v1-name").innerText = a1.title.substring(0, 20) + (a1.title.length > 20 ? '...' : '');
+            document.getElementById("tbl-v2-name").innerText = a2.title.substring(0, 20) + (a2.title.length > 20 ? '...' : '');
+            
+            // Load Table
+            const f1 = a1.features;
+            const f2 = a2.features;
+            
+            const metrics = [
+                { key: 'duration', label: 'Duration (seconds)', target: '15s - 60s' },
+                { key: 'brightness', label: 'Average Brightness', target: '100 - 150' },
+                { key: 'contrast', label: 'Average Contrast', target: '60 - 120' },
+                { key: 'motion_score', label: 'Motion Activity', target: '2.0 - 8.0' },
+                { key: 'scene_change_score', label: 'Scene Cuts / sec', target: '0.1 - 0.3' },
+                { key: 'sharpness', label: 'Sharpness Quality', target: '> 150' },
+                { key: 'average_saturation', label: 'Color Saturation', target: '80 - 140' },
+                { key: 'face_count', label: 'Speaker Face Count', target: '>= 1.0' },
+                { key: 'emotion_score', label: 'Emotion Score', target: '> 50.0' },
+                { key: 'hook_score', label: 'Hook Score (First 3s)', target: '> 70.0' },
+                { key: 'audio_energy', label: 'Audio Energy Volume', target: '55 - 80' }
+            ];
+            
+            let tbody = "";
+            metrics.forEach(m => {
+                const v1 = f1[m.key] !== undefined ? f1[m.key] : 'N/A';
+                const v2 = f2[m.key] !== undefined ? f2[m.key] : 'N/A';
+                
+                // Compare and highlight the superior score (if numeric)
+                let c1 = "";
+                let c2 = "";
+                
+                if (typeof v1 === 'number' && typeof v2 === 'number') {
+                    // Let's decide which is closer to optimum or just highlight
+                    // For virality indicators:
+                    if (m.key === 'hook_score' || m.key === 'emotion_score' || m.key === 'sharpness') {
+                        if (v1 > v2) c1 = "text-primary fw-bold";
+                        else if (v2 > v1) c2 = "text-success fw-bold";
+                    }
+                }
+                
+                tbody += `
+                    <tr class="border-light-subtle">
+                        <td class="text-muted">${m.label}</td>
+                        <td class="${c1}">${v1}</td>
+                        <td class="${c2}">${v2}</td>
+                        <td class="text-muted small">${m.target}</td>
+                    </tr>
+                `;
+            });
+            document.getElementById("comparisonTableBody").innerHTML = tbody;
+            
+            // Load Recommendations
+            let recsHtml1 = "";
+            a1.recommendations.forEach(r => {
+                recsHtml1 += `<li class="bg-transparent border-light-subtle text-muted py-2 px-0 list-group-item small">
+                    <b class="text-light d-block">${r.title}</b> ${r.description}
+                </li>`;
+            });
+            document.getElementById("v1-recs").innerHTML = recsHtml1 || '<li class="bg-transparent text-muted py-2 px-0 list-group-item small">No recommendations needed.</li>';
+            
+            let recsHtml2 = "";
+            a2.recommendations.forEach(r => {
+                recsHtml2 += `<li class="bg-transparent border-light-subtle text-muted py-2 px-0 list-group-item small">
+                    <b class="text-light d-block">${r.title}</b> ${r.description}
+                </li>`;
+            });
+            document.getElementById("v2-recs").innerHTML = recsHtml2 || '<li class="bg-transparent text-muted py-2 px-0 list-group-item small">No recommendations needed.</li>';
+            
+            // Build comparative radar chart
+            if (chartInstance) chartInstance.destroy();
+            
+            const ctx = document.getElementById("comparisonChart").getContext("2d");
+            
+            // Normalize values for chart visual clarity (0-100 scale)
+            const radarLabels = ['Hook', 'Brightness', 'Contrast', 'Motion', 'Cuts', 'Sharpness', 'Emotion', 'Audio'];
+            const scaleVal = (val, maxBound) => Math.min(100, Math.max(5, (val / maxBound) * 100));
+            
+            const dataset1 = [
+                f1.hook_score,
+                scaleVal(f1.brightness, 200),
+                scaleVal(f1.contrast, 150),
+                scaleVal(f1.motion_score, 12),
+                scaleVal(f1.scene_change_score, 0.4),
+                scaleVal(f1.sharpness, 800),
+                f1.emotion_score,
+                f1.audio_energy
+            ];
+            
+            const dataset2 = [
+                f2.hook_score,
+                scaleVal(f2.brightness, 200),
+                scaleVal(f2.contrast, 150),
+                scaleVal(f2.motion_score, 12),
+                scaleVal(f2.scene_change_score, 0.4),
+                scaleVal(f2.sharpness, 800),
+                f2.emotion_score,
+                f2.audio_energy
+            ];
+            
+            chartInstance = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: radarLabels,
+                    datasets: [
+                        {
+                            label: a1.title.substring(0, 20) + '...',
+                            data: dataset1,
+                            backgroundColor: 'rgba(79, 70, 229, 0.2)',
+                            borderColor: 'rgb(79, 70, 229)',
+                            pointBackgroundColor: 'rgb(79, 70, 229)',
+                            borderWidth: 2
+                        },
+                        {
+                            label: a2.title.substring(0, 20) + '...',
+                            data: dataset2,
+                            backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                            borderColor: 'rgb(16, 185, 129)',
+                            pointBackgroundColor: 'rgb(16, 185, 129)',
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(255,255,255,0.1)' },
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            pointLabels: { color: '#94a3b8', font: { family: 'Outfit', size: 11 } },
+                            ticks: { display: false },
+                            min: 0,
+                            max: 100
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: { color: '#f1f5f9', font: { family: 'Outfit' } }
+                        }
+                    }
+                }
+            });
+        })
+        .catch(err => {
+            alert("Error loading comparison report: " + err);
+        });
+    }
+    
+    // Wire change events
+    s1.addEventListener("change", triggerComparison);
+    s2.addEventListener("change", triggerComparison);
+    
+    // Trigger automatically if parameters present
+    if (s1.value && s2.value) {
+        triggerComparison();
+    }
+});
+</script>
+{% endblock %}
