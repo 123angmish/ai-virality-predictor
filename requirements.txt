@@ -1,6 +1,6 @@
 Flask>=3.0.0
 Werkzeug>=3.0.0
-opencv-python>=4.8.0
+opencv-python-headless
 numpy>=1.22.0
 pandas>=1.4.0
 scikit-learn>=1.0.0
