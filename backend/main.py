@@ -37,6 +37,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+def root_welcome():
+    return {
+        "status": "online",
+        "service": "AI Virality Predictor & Multi-Platform Optimizer API",
+        "version": "1.0.0",
+        "docs_url": "/docs",
+        "model_status_url": "/api/v1/model-status"
+    }
+
 # Global model and metadata state
 MODEL_DIR = os.path.dirname(__file__)
 MODEL_PATH = os.path.join(MODEL_DIR, "virality_model.pkl")
