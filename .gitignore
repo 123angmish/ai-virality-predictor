@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Next.js build output
+.next/
+**/next/
+out/
+build/
+
+# Python cache & virtual environments
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+ENV/
+env/
+
+# Large ML data cache
+data_cache/
+temp_uploads/
+*.mp4
+*.mov
+*.avi
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.production.local
