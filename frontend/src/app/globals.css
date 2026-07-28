@@ -3,48 +3,74 @@
 @tailwind utilities;
 
 :root {
-  --bg-main: #FFF7F9; /* Soft Modern Pinkish White */
-  --card-bg: #FFFFFF;
-  --border-color: #FFE4E6; /* Soft Rose Border */
-  --text-primary: #0F172A;
-  --primary-rose: #E11D48;
-  --rose-accent: #F43F5E;
-  --pink-light: #FFF1F2;
+  --primary: #635BFF;
+  --primary-dark: #4338CA;
+  --secondary-blue: #2F80ED;
+  --accent-coral: #FF7A59;
+  --success: #17A673;
+  --warning: #F5A524;
+  --error: #E5484D;
+  --bg-main: #F7F8FC;
+  --surface: #FFFFFF;
+  --main-text: #111827;
+  --secondary-text: #667085;
+  --border-color: #E6E8F0;
 }
 
 body {
   background-color: var(--bg-main);
-  color: var(--text-primary);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--main-text);
+  font-family: 'Inter', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-/* Custom Handcrafted Pinkish-Whitish Glassmorphism Effect */
-.glass-card {
+/* 2026 Light Theme Glass & Card Surfaces */
+.surface-card {
   background: #FFFFFF;
   border: 1px solid var(--border-color);
-  box-shadow: 0 4px 20px -2px rgba(244, 63, 94, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 2px 10px -2px rgba(16, 24, 40, 0.04);
   border-radius: 1.25rem;
 }
 
-.glass-card-hover {
+.surface-hover {
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.glass-card-hover:hover {
-  border-color: #FECDD3;
-  box-shadow: 0 10px 25px -4px rgba(244, 63, 94, 0.12);
+.surface-hover:hover {
+  border-color: #C7D2FE;
+  box-shadow: 0 12px 28px -4px rgba(99, 91, 255, 0.08), 0 4px 10px -2px rgba(16, 24, 40, 0.03);
   transform: translateY(-2px);
 }
 
-/* Custom Pinkish Scrollbar */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(230, 232, 240, 0.8);
+}
+
+/* Smooth custom scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #FFF1F2;
+  background: #F1F3F9;
 }
 ::-webkit-scrollbar-thumb {
-  background: #F43F5E;
+  background: #635BFF;
   border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #4338CA;
+}
+
+/* Smooth fade in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
