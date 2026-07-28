@@ -8,10 +8,12 @@ import {
   Zap, 
   Loader2,
   FileVideo,
-  X
+  X,
+  CheckCircle2,
+  Activity
 } from 'lucide-react';
 
-export default function MainAnalysisTool({ onAnalyzeUrl, onAnalyzeUpload, onSelectDemo, isLoading }) {
+export default function MainAnalysisTool({ onAnalyzeUrl, onAnalyzeUpload, onSelectDemo }) {
   const [activeTab, setActiveTab] = useState('url'); // 'url' | 'upload' | 'demo'
   const [urlInput, setUrlInput] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
@@ -24,17 +26,18 @@ export default function MainAnalysisTool({ onAnalyzeUrl, onAnalyzeUpload, onSele
   const [contentLanguage, setContentLanguage] = useState('English');
 
   // Real Progress Stepper State
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [progressStep, setProgressStep] = useState(0);
 
   const steps = [
-    "Validating source URL / video container...",
+    "Validating source URL & video container...",
     "Extracting video frames and metadata...",
     "Inspecting first 3 seconds (Hook Optical Flow)...",
     "Measuring visual scene cut frequency...",
     "Analysing motion vectors and color vibrancy...",
     "Processing audio signals & RMS energy...",
     "Running HistGradientBoosting Prediction Model...",
-    "Generating platform recommendations..."
+    "Generating platform recommendations & report..."
   ];
 
   const handleUrlSubmit = (e) => {
@@ -72,18 +75,28 @@ export default function MainAnalysisTool({ onAnalyzeUrl, onAnalyzeUpload, onSele
     });
   };
 
+  const handleDemoSubmit = () => {
+    startSteppedProgress(() => {
+      onSelectDemo();
+    });
+  };
+
   const startSteppedProgress = (onComplete) => {
+    setIsAnalyzing(true);
     setProgressStep(1);
     let step = 1;
     const interval = setInterval(() => {
       step++;
       if (step > steps.length) {
         clearInterval(interval);
-        onComplete();
+        setTimeout(() => {
+          setIsAnalyzing(false);
+          onComplete();
+        }, 300);
       } else {
         setProgressStep(step);
       }
-    }, 250);
+    }, 350);
   };
 
   return (
@@ -168,8 +181,8 @@ export default function MainAnalysisTool({ onAnalyzeUrl, onAnalyzeUpload, onSele
                   type="submit"
                   className="absolute right-2.5 px-6 py-2.5 bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 hover:from-brand-700 hover:to-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center space-x-1.5 hover:scale-105 cursor-pointer"
                 >
-                  {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-3.5 h-3.5 fill-current text-yellow-300" />}
-                  <span>{isLoading ? 'Analysing...' : 'Analyse Now'}</span>
+                  <Zap className="w-3.5 h-3.5 fill-current text-yellow-300" />
+                  <span>Analyse Now</span>
                 </button>
               </div>
 
@@ -254,7 +267,7 @@ export default function MainAnalysisTool({ onAnalyzeUrl, onAnalyzeUpload, onSele
                 onClick={handleUploadSubmit}
                 className="w-full py-3.5 bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 hover:from-brand-700 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center justify-center space-x-2 hover:scale-[1.01] cursor-pointer"
               >
-                {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4 text-yellow-300 fill-current" />}
+                <Zap className="w-4 h-4 text-yellow-300 fill-current" />
                 <span>{selectedFile ? `Analyse ${selectedFile.name}` : 'Analyse Sample Video File'}</span>
               </button>
             </div>
@@ -265,7 +278,7 @@ export default function MainAnalysisTool({ onAnalyzeUrl, onAnalyzeUpload, onSele
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <button
                 type="button"
-                onClick={onSelectDemo}
+                onClick={handleDemoSubmit}
                 className="p-4 bg-slate-50 hover:bg-brand-50 border border-slate-200 hover:border-brand-300 rounded-2xl text-left space-y-2 transition-all group shadow-xs hover:scale-105"
               >
                 <span className="text-[10px] font-extrabold bg-red-100 text-red-700 px-2 py-0.5 rounded-md">YouTube Shorts</span>
@@ -275,7 +288,7 @@ export default function MainAnalysisTool({ onAnalyzeUrl, onAnalyzeUpload, onSele
 
               <button
                 type="button"
-                onClick={onSelectDemo}
+                onClick={handleDemoSubmit}
                 className="p-4 bg-slate-50 hover:bg-brand-50 border border-slate-200 hover:border-brand-300 rounded-2xl text-left space-y-2 transition-all group shadow-xs hover:scale-105"
               >
                 <span className="text-[10px] font-extrabold bg-black text-white px-2 py-0.5 rounded-md">TikTok Viral</span>
@@ -285,7 +298,7 @@ export default function MainAnalysisTool({ onAnalyzeUrl, onAnalyzeUpload, onSele
 
               <button
                 type="button"
-                onClick={onSelectDemo}
+                onClick={handleDemoSubmit}
                 className="p-4 bg-slate-50 hover:bg-brand-50 border border-slate-200 hover:border-brand-300 rounded-2xl text-left space-y-2 transition-all group shadow-xs hover:scale-105"
               >
                 <span className="text-[10px] font-extrabold bg-purple-100 text-purple-700 px-2 py-0.5 rounded-md">Instagram Reel</span>
@@ -356,33 +369,40 @@ export default function MainAnalysisTool({ onAnalyzeUrl, onAnalyzeUpload, onSele
             </div>
           </div>
 
-          {/* Real Multi-Stage Progress Interface */}
-          {isLoading && progressStep > 0 && (
-            <div className="bg-brand-50/70 border border-brand-200 rounded-2xl p-5 space-y-3 animate-fade-in text-left">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Loader2 className="w-4 h-4 text-brand-600 animate-spin" />
-                  <span className="text-xs font-extrabold text-brand-900">
-                    Step {progressStep} of {steps.length}: {steps[progressStep - 1]}
-                  </span>
-                </div>
-                <span className="text-xs font-black text-brand-700">
-                  {Math.round((progressStep / steps.length) * 100)}%
-                </span>
-              </div>
-
-              {/* Progress Bar */}
-              <div className="w-full bg-brand-200/60 rounded-full h-2 overflow-hidden">
-                <div 
-                  className="bg-gradient-to-r from-brand-600 to-indigo-600 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${(progressStep / steps.length) * 100}%` }}
-                ></div>
-              </div>
-            </div>
-          )}
-
         </div>
       </div>
+
+      {/* FULL-SCREEN REAL-TIME ANALYSIS LOADING MODAL */}
+      {isAnalyzing && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-md animate-fade-in">
+          <div className="surface-card p-8 border-slate-800 bg-slate-900 text-white max-w-md w-full rounded-3xl shadow-2xl text-center space-y-6 border">
+            
+            <div className="w-16 h-16 rounded-full bg-brand-600/20 text-brand-400 border border-brand-500/40 flex items-center justify-center mx-auto shadow-lg">
+              <Loader2 className="w-8 h-8 animate-spin" />
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-xl font-black text-white tracking-tight">Analysing Video Intelligence...</h3>
+              <p className="text-xs text-brand-300 font-bold">
+                Step {progressStep} of {steps.length}: {steps[progressStep - 1]}
+              </p>
+            </div>
+
+            {/* Live Progress Bar */}
+            <div className="w-full bg-slate-800 rounded-full h-3 overflow-hidden border border-slate-700">
+              <div 
+                className="bg-gradient-to-r from-brand-500 via-indigo-500 to-purple-500 h-3 rounded-full transition-all duration-300"
+                style={{ width: `${(progressStep / steps.length) * 100}%` }}
+              ></div>
+            </div>
+
+            <div className="text-[11px] text-slate-400 font-medium">
+              OpenCV Vision & Librosa Spectrogram Audio Engine Running
+            </div>
+
+          </div>
+        </div>
+      )}
     </section>
   );
 }

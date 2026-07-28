@@ -59,37 +59,29 @@ export default function MarketingHomepage() {
     window.location.href = route;
   };
 
-  const scrollToResults = () => {
-    setTimeout(() => {
-      const el = document.getElementById('results-audit');
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }, 150);
-  };
-
   const handleAnalyzeUrl = async (url, options) => {
     setIsLoading(true);
     const result = await analyzeVideoUrl(url, options);
     setAnalysisData(result);
-    const updated = addHistoryItem(result);
-    setHistoryList(updated);
+    addHistoryItem(result);
     setIsLoading(false);
-    scrollToResults();
+    window.location.href = '/analysis/1';
   };
 
   const handleAnalyzeUpload = async (file, options) => {
     setIsLoading(true);
     const result = await analyzeVideoUpload(file, options);
     setAnalysisData(result);
-    const updated = addHistoryItem(result);
-    setHistoryList(updated);
+    addHistoryItem(result);
     setIsLoading(false);
-    scrollToResults();
+    window.location.href = '/analysis/1';
   };
 
   const handleSelectDemo = () => {
     const demo = getDemoAnalysis();
     setAnalysisData(demo);
-    scrollToResults();
+    addHistoryItem(demo);
+    window.location.href = '/analysis/1';
   };
 
   const handleLoginSuccess = (user) => {
