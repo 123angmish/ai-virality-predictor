@@ -59,6 +59,13 @@ export default function MarketingHomepage() {
     window.location.href = route;
   };
 
+  const scrollToResults = () => {
+    setTimeout(() => {
+      const el = document.getElementById('results-audit');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }, 150);
+  };
+
   const handleAnalyzeUrl = async (url, options) => {
     setIsLoading(true);
     const result = await analyzeVideoUrl(url, options);
@@ -66,6 +73,7 @@ export default function MarketingHomepage() {
     const updated = addHistoryItem(result);
     setHistoryList(updated);
     setIsLoading(false);
+    scrollToResults();
   };
 
   const handleAnalyzeUpload = async (file, options) => {
@@ -75,11 +83,13 @@ export default function MarketingHomepage() {
     const updated = addHistoryItem(result);
     setHistoryList(updated);
     setIsLoading(false);
+    scrollToResults();
   };
 
   const handleSelectDemo = () => {
     const demo = getDemoAnalysis();
     setAnalysisData(demo);
+    scrollToResults();
   };
 
   const handleLoginSuccess = (user) => {

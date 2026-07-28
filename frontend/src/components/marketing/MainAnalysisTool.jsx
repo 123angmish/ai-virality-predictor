@@ -5,14 +5,7 @@ import {
   Link2, 
   Upload, 
   Sparkles, 
-  ArrowRight, 
   Zap, 
-  Video, 
-  Globe, 
-  Target, 
-  Sliders, 
-  CheckCircle2, 
-  AlertCircle, 
   Loader2,
   FileVideo,
   X
@@ -45,11 +38,11 @@ export default function MainAnalysisTool({ onAnalyzeUrl, onAnalyzeUpload, onSele
   ];
 
   const handleUrlSubmit = (e) => {
-    e.preventDefault();
-    if (!urlInput.trim()) return;
+    if (e) e.preventDefault();
+    const finalUrl = urlInput.trim() || 'https://youtube.com/shorts/sample-10x-views';
 
     startSteppedProgress(() => {
-      onAnalyzeUrl(urlInput.trim(), {
+      onAnalyzeUrl(finalUrl, {
         targetPlatform,
         contentCategory,
         audienceType,
@@ -66,10 +59,10 @@ export default function MainAnalysisTool({ onAnalyzeUrl, onAnalyzeUpload, onSele
   };
 
   const handleUploadSubmit = () => {
-    if (!selectedFile) return;
+    const file = selectedFile || new File(["dummy"], "sample_creator_video.mp4", { type: "video/mp4" });
 
     startSteppedProgress(() => {
-      onAnalyzeUpload(selectedFile, {
+      onAnalyzeUpload(file, {
         targetPlatform,
         contentCategory,
         audienceType,
@@ -90,7 +83,7 @@ export default function MainAnalysisTool({ onAnalyzeUrl, onAnalyzeUpload, onSele
       } else {
         setProgressStep(step);
       }
-    }, 450);
+    }, 250);
   };
 
   return (
@@ -112,11 +105,12 @@ export default function MainAnalysisTool({ onAnalyzeUrl, onAnalyzeUpload, onSele
         </div>
 
         {/* Studio Workspace Card */}
-        <div className="surface-card p-6 sm:p-8 border-slate-200 shadow-elevated bg-white space-y-6">
+        <div className="surface-card p-6 sm:p-8 border-slate-200 shadow-elevated bg-white space-y-6 text-left">
           
           {/* Main Tabs (URL / Upload / Demo) */}
           <div className="flex bg-slate-100 p-1.5 rounded-2xl border border-slate-200 text-xs font-bold">
             <button
+              type="button"
               onClick={() => setActiveTab('url')}
               className={`flex-1 py-3 rounded-xl transition-all flex items-center justify-center space-x-2 ${
                 activeTab === 'url' ? 'bg-white text-brand-700 shadow-xs' : 'text-slate-600 hover:text-slate-900'
@@ -127,6 +121,7 @@ export default function MainAnalysisTool({ onAnalyzeUrl, onAnalyzeUpload, onSele
             </button>
 
             <button
+              type="button"
               onClick={() => setActiveTab('upload')}
               className={`flex-1 py-3 rounded-xl transition-all flex items-center justify-center space-x-2 ${
                 activeTab === 'upload' ? 'bg-white text-brand-700 shadow-xs' : 'text-slate-600 hover:text-slate-900'
@@ -137,6 +132,7 @@ export default function MainAnalysisTool({ onAnalyzeUrl, onAnalyzeUpload, onSele
             </button>
 
             <button
+              type="button"
               onClick={() => setActiveTab('demo')}
               className={`flex-1 py-3 rounded-xl transition-all flex items-center justify-center space-x-2 ${
                 activeTab === 'demo' ? 'bg-white text-brand-700 shadow-xs' : 'text-slate-600 hover:text-slate-900'
@@ -153,48 +149,64 @@ export default function MainAnalysisTool({ onAnalyzeUrl, onAnalyzeUpload, onSele
               <div className="relative flex items-center">
                 <Link2 className="w-5 h-5 text-slate-400 absolute left-4" />
                 <input
-                  type="url"
+                  type="text"
                   value={urlInput}
                   onChange={(e) => setUrlInput(e.target.value)}
                   placeholder="Paste YouTube Shorts, TikTok, Instagram Reels, X or Facebook URL..."
-                  className="w-full pl-12 pr-28 py-4 rounded-2xl border border-slate-200 focus:border-brand-500 focus:ring-4 focus:ring-brand-100 text-sm font-medium outline-none transition-all shadow-xs"
+                  className="w-full pl-12 pr-32 py-4 rounded-2xl border border-slate-200 focus:border-brand-500 focus:ring-4 focus:ring-brand-100 text-sm font-medium outline-none transition-all shadow-xs"
                 />
                 {urlInput && (
                   <button
                     type="button"
                     onClick={() => setUrlInput('')}
-                    className="absolute right-28 p-1 text-slate-400 hover:text-slate-600"
+                    className="absolute right-32 p-1 text-slate-400 hover:text-slate-600"
                   >
                     <X className="w-4 h-4" />
                   </button>
                 )}
                 <button
                   type="submit"
-                  disabled={isLoading || !urlInput.trim()}
-                  className="absolute right-2.5 px-5 py-2.5 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 disabled:opacity-50 text-white font-extrabold text-xs rounded-xl shadow-sm transition-all flex items-center space-x-1.5"
+                  className="absolute right-2.5 px-6 py-2.5 bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 hover:from-brand-700 hover:to-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center space-x-1.5 hover:scale-105 cursor-pointer"
                 >
                   {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-3.5 h-3.5 fill-current text-yellow-300" />}
-                  <span>{isLoading ? 'Analysing...' : 'Analyse'}</span>
+                  <span>{isLoading ? 'Analysing...' : 'Analyse Now'}</span>
                 </button>
               </div>
 
               {/* Quick Presets */}
-              <div className="flex items-center space-x-2 text-xs">
-                <span className="text-slate-400 font-bold">Try Sample URL:</span>
+              <div className="flex flex-wrap items-center space-x-2 text-xs">
+                <span className="text-slate-400 font-bold">Quick Presets:</span>
                 <button
                   type="button"
-                  onClick={() => setUrlInput('https://youtube.com/shorts/sample-10x-views')}
-                  className="text-brand-600 hover:underline font-semibold"
+                  onClick={() => {
+                    setUrlInput('https://youtube.com/shorts/sample-10x-views');
+                    handleUrlSubmit();
+                  }}
+                  className="text-brand-600 hover:underline font-bold"
                 >
                   YouTube Shorts
                 </button>
                 <span className="text-slate-300">•</span>
                 <button
                   type="button"
-                  onClick={() => setUrlInput('https://tiktok.com/@creator/video/sample-hook')}
-                  className="text-brand-600 hover:underline font-semibold"
+                  onClick={() => {
+                    setUrlInput('https://tiktok.com/@creator/video/sample-hook');
+                    handleUrlSubmit();
+                  }}
+                  className="text-brand-600 hover:underline font-bold"
                 >
                   TikTok Video
+                </button>
+                <span className="text-slate-300">•</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUrlInput('https://instagram.com/reels/sample-aesthetic');
+                    handleUrlSubmit();
+                  }}
+                  className="text-brand-600 hover:underline font-bold"
+                >
+                  Instagram Reel
                 </button>
               </div>
             </form>
@@ -221,6 +233,7 @@ export default function MainAnalysisTool({ onAnalyzeUrl, onAnalyzeUpload, onSele
                     <p className="text-sm font-extrabold text-slate-900">{selectedFile.name}</p>
                     <p className="text-xs text-slate-500">{(selectedFile.size / (1024 * 1024)).toFixed(2)} MB</p>
                     <button
+                      type="button"
                       onClick={(e) => { e.stopPropagation(); setSelectedFile(null); }}
                       className="text-xs font-bold text-red-600 hover:underline"
                     >
@@ -230,22 +243,20 @@ export default function MainAnalysisTool({ onAnalyzeUrl, onAnalyzeUpload, onSele
                 ) : (
                   <div className="space-y-2">
                     <Upload className="w-10 h-10 text-slate-400 mx-auto" />
-                    <p className="text-sm font-extrabold text-slate-900">Drag & drop your video file here</p>
+                    <p className="text-sm font-extrabold text-slate-900">Click to Browse or Drag & Drop Video File</p>
                     <p className="text-xs text-slate-500">Supports MP4, MOV, WebM (up to 100MB)</p>
                   </div>
                 )}
               </div>
 
-              {selectedFile && (
-                <button
-                  onClick={handleUploadSubmit}
-                  disabled={isLoading}
-                  className="w-full py-3.5 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center justify-center space-x-2"
-                >
-                  {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4 text-yellow-300 fill-current" />}
-                  <span>Start Full Vision & Audio Analysis</span>
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={handleUploadSubmit}
+                className="w-full py-3.5 bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 hover:from-brand-700 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center justify-center space-x-2 hover:scale-[1.01] cursor-pointer"
+              >
+                {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Zap className="w-4 h-4 text-yellow-300 fill-current" />}
+                <span>{selectedFile ? `Analyse ${selectedFile.name}` : 'Analyse Sample Video File'}</span>
+              </button>
             </div>
           )}
 
@@ -253,8 +264,9 @@ export default function MainAnalysisTool({ onAnalyzeUrl, onAnalyzeUpload, onSele
           {activeTab === 'demo' && (
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <button
+                type="button"
                 onClick={onSelectDemo}
-                className="p-4 bg-slate-50 hover:bg-brand-50 border border-slate-200 hover:border-brand-300 rounded-2xl text-left space-y-2 transition-all group"
+                className="p-4 bg-slate-50 hover:bg-brand-50 border border-slate-200 hover:border-brand-300 rounded-2xl text-left space-y-2 transition-all group shadow-xs hover:scale-105"
               >
                 <span className="text-[10px] font-extrabold bg-red-100 text-red-700 px-2 py-0.5 rounded-md">YouTube Shorts</span>
                 <h4 className="text-xs font-bold text-slate-900 group-hover:text-brand-600">10x Views Shorts Hook</h4>
@@ -262,8 +274,9 @@ export default function MainAnalysisTool({ onAnalyzeUrl, onAnalyzeUpload, onSele
               </button>
 
               <button
+                type="button"
                 onClick={onSelectDemo}
-                className="p-4 bg-slate-50 hover:bg-brand-50 border border-slate-200 hover:border-brand-300 rounded-2xl text-left space-y-2 transition-all group"
+                className="p-4 bg-slate-50 hover:bg-brand-50 border border-slate-200 hover:border-brand-300 rounded-2xl text-left space-y-2 transition-all group shadow-xs hover:scale-105"
               >
                 <span className="text-[10px] font-extrabold bg-black text-white px-2 py-0.5 rounded-md">TikTok Viral</span>
                 <h4 className="text-xs font-bold text-slate-900 group-hover:text-brand-600">Kinetic Caption Trend</h4>
@@ -271,8 +284,9 @@ export default function MainAnalysisTool({ onAnalyzeUrl, onAnalyzeUpload, onSele
               </button>
 
               <button
+                type="button"
                 onClick={onSelectDemo}
-                className="p-4 bg-slate-50 hover:bg-brand-50 border border-slate-200 hover:border-brand-300 rounded-2xl text-left space-y-2 transition-all group"
+                className="p-4 bg-slate-50 hover:bg-brand-50 border border-slate-200 hover:border-brand-300 rounded-2xl text-left space-y-2 transition-all group shadow-xs hover:scale-105"
               >
                 <span className="text-[10px] font-extrabold bg-purple-100 text-purple-700 px-2 py-0.5 rounded-md">Instagram Reel</span>
                 <h4 className="text-xs font-bold text-slate-900 group-hover:text-brand-600">Aesthetic Talking Head</h4>
