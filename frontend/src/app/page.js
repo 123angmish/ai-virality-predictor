@@ -14,18 +14,23 @@ import Pricing from '../components/marketing/Pricing';
 import FAQ from '../components/marketing/FAQ';
 import Footer from '../components/layout/Footer';
 
-import ScoreGauge from '../components/analysis/ScoreGauge';
-import HookLab from '../components/analysis/HookLab';
-import ViralityDNA from '../components/analysis/ViralityDNA';
+import AnalysisResultHeader from '../components/analysis/AnalysisResultHeader';
+import ExecutiveSummary from '../components/analysis/ExecutiveSummary';
+import MetricSummaryCard from '../components/analysis/MetricSummaryCard';
+import ResultSectionNav from '../components/analysis/ResultSectionNav';
+import VideoAnalysisPlayer from '../components/analysis/VideoAnalysisPlayer';
+import AnalysisTimeline from '../components/analysis/AnalysisTimeline';
 import RetentionRiskMap from '../components/analysis/RetentionRiskMap';
+import HookLab from '../components/analysis/HookLab';
+import PlatformFitComparison from '../components/analysis/PlatformFitComparison';
 import ContentDoctor from '../components/analysis/ContentDoctor';
+import ViralityDNAChart from '../components/analysis/ViralityDNA';
 import WhatIfSimulator from '../components/analysis/WhatIfSimulator';
-import ReliabilityPanel from '../components/analysis/ReliabilityPanel';
-import MetricsGrid from '../components/MetricsGrid';
-import PlatformTabs from '../components/PlatformTabs';
-import ContentAnalysisCard from '../components/ContentAnalysisCard';
-import VideoPreview from '../components/VideoPreview';
-import ReportExporter from '../components/ReportExporter';
+import ImprovementChecklist from '../components/analysis/ImprovementChecklist';
+import DataReliabilityPanel from '../components/analysis/ReliabilityPanel';
+import MetricBreakdownTable from '../components/analysis/MetricBreakdownTable';
+import ResultFooter from '../components/analysis/ResultFooter';
+
 import AuthModal from '../components/AuthModal';
 import HistoryDrawer from '../components/HistoryDrawer';
 import CommandPalette from '../components/analysis/CommandPalette';
@@ -82,13 +87,8 @@ export default function MarketingHomepage() {
     setCurrentUser(user);
   };
 
-  const handleLogout = () => {
-    setStoredUser(null);
-    setCurrentUser(null);
-  };
-
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#F6F7FB] flex flex-col font-sans">
       
       {/* Translucent Marketing Navbar */}
       <PublicNavbar
@@ -119,51 +119,75 @@ export default function MarketingHomepage() {
 
       {/* Diagnostic Audit Output Section */}
       {analysisData && (
-        <section id="results-audit" className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 animate-fade-in w-full">
-          <div className="border-b border-slate-200 pb-4 text-left">
-            <h2 className="text-2xl font-black text-slate-900 tracking-tight">Diagnostic Analysis Results</h2>
-            <p className="text-xs text-slate-500 font-medium">Complete video virality report and platform readiness audit.</p>
-          </div>
+        <section id="results-audit" className="py-12 max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 space-y-8 animate-fade-in w-full">
+          
+          <AnalysisResultHeader
+            videoMeta={analysisData.videoMeta}
+            onBack={() => setAnalysisData(null)}
+            onNavigate={handleNavigate}
+          />
 
-          <ReportExporter analysisData={analysisData} />
+          <ExecutiveSummary
+            viralityScore={analysisData.virality_score}
+            confidence={analysisData.model_confidence}
+          />
 
-          <MetricsGrid
+          <MetricSummaryCard
             features={analysisData.features}
             estimatedReach={analysisData.estimated_reach}
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div className="lg:col-span-5 space-y-6">
-              <ScoreGauge
-                score={analysisData.virality_score}
-                confidence={analysisData.model_confidence}
-              />
-
-              <VideoPreview
+            <div className="lg:col-span-5">
+              <VideoAnalysisPlayer
                 timestamps={analysisData.timestamps}
-                filename={analysisData.filename || "Uploaded_Video.mp4"}
+                filename={analysisData.filename}
                 videoMeta={analysisData.videoMeta}
               />
-
-              <HookLab hookData={analysisData.hookLab} />
-
-              <ViralityDNA dnaData={analysisData.viralityDNA} />
             </div>
 
-            <div className="lg:col-span-7 space-y-6">
-              <PlatformTabs platforms={analysisData.platforms} />
-
-              <ContentDoctor doctorData={analysisData.contentDoctor} />
-
-              <RetentionRiskMap riskMap={analysisData.retentionRiskMap} />
-
-              <WhatIfSimulator baseScore={analysisData.virality_score} />
-
-              <ReliabilityPanel reliability={analysisData.reliability} />
+            <div className="lg:col-span-7">
+              <AnalysisTimeline timestamps={analysisData.timestamps} />
             </div>
           </div>
 
-          <ContentAnalysisCard contentAnalysis={analysisData.contentAnalysis} />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="lg:col-span-7">
+              <HookLab hookData={analysisData.hookLab} />
+            </div>
+
+            <div className="lg:col-span-5">
+              <RetentionRiskMap riskMap={analysisData.retentionRiskMap} />
+            </div>
+          </div>
+
+          <PlatformFitComparison platforms={analysisData.platforms} />
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="lg:col-span-7">
+              <ContentDoctor doctorData={analysisData.contentDoctor} />
+            </div>
+
+            <div className="lg:col-span-5">
+              <ViralityDNAChart dnaData={analysisData.viralityDNA} />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div className="lg:col-span-5">
+              <WhatIfSimulator baseScore={analysisData.virality_score} />
+            </div>
+
+            <div className="lg:col-span-7">
+              <ImprovementChecklist />
+            </div>
+          </div>
+
+          <DataReliabilityPanel reliability={analysisData.reliability} />
+
+          <MetricBreakdownTable features={analysisData.features} />
+
+          <ResultFooter onNavigate={handleNavigate} />
         </section>
       )}
 
@@ -179,14 +203,13 @@ export default function MarketingHomepage() {
       {/* Footer */}
       <Footer />
 
-      {/* Auth Modal */}
+      {/* Modals */}
       <AuthModal
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
         onLoginSuccess={handleLoginSuccess}
       />
 
-      {/* History Drawer */}
       <HistoryDrawer
         isOpen={isHistoryOpen}
         onClose={() => setIsHistoryOpen(false)}
@@ -195,7 +218,6 @@ export default function MarketingHomepage() {
         onClearHistory={() => { clearStoredHistory(); setHistoryList([]); }}
       />
 
-      {/* Command Palette */}
       <CommandPalette
         isOpen={isCmdOpen}
         onClose={() => setIsCmdOpen(false)}
