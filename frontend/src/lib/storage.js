@@ -1,6 +1,6 @@
 /**
  * Storage Manager for AI Virality Predictor
- * Manages persistence for analyses, user session, video library, and preferences.
+ * Manages persistence for analyses, user session, video library, and preferences safely.
  */
 
 const STORAGE_KEYS = {
@@ -9,6 +9,15 @@ const STORAGE_KEYS = {
   LIBRARY: 'virality_library',
   PREFERENCES: 'virality_preferences',
   SAVED_REPORTS: 'virality_saved_reports'
+};
+
+const sanitizeForStorage = (obj) => {
+  if (!obj || typeof obj !== 'object') return obj;
+  const clean = { ...obj };
+  if (clean.videoMeta) {
+    clean.videoMeta = { ...clean.videoMeta, blobUrl: null };
+  }
+  return clean;
 };
 
 export const getStoredUser = () => {
@@ -41,15 +50,16 @@ export const getStoredHistory = () => {
 
 export const addHistoryItem = (item) => {
   try {
+    const cleanItem = sanitizeForStorage(item);
     const current = getStoredHistory();
     const formattedItem = {
-      id: item.id || `analysis-${Date.now()}`,
+      id: cleanItem.id || `analysis-${Date.now()}`,
       timestamp: Date.now(),
       date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      ...item
+      ...cleanItem
     };
-    const updated = [formattedItem, ...current.filter(i => i.id !== formattedItem.id)].slice(0, 30);
+    const updated = [formattedItem, ...current.filter(i => i.id !== formattedItem.id)].slice(0, 15);
     localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(updated));
     setLatestAnalysis(formattedItem);
     return updated;
@@ -75,12 +85,13 @@ export const getStoredLibrary = () => {
 
 export const addLibraryItem = (item) => {
   try {
+    const cleanItem = sanitizeForStorage(item);
     const current = getStoredLibrary();
     const newItem = {
-      id: item.id || `lib-${Date.now()}`,
+      id: cleanItem.id || `lib-${Date.now()}`,
       addedAt: new Date().toISOString(),
-      tags: item.tags || ['Viral Candidate'],
-      ...item
+      tags: cleanItem.tags || ['Viral Candidate'],
+      ...cleanItem
     };
     const updated = [newItem, ...current.filter(i => i.id !== newItem.id)];
     localStorage.setItem(STORAGE_KEYS.LIBRARY, JSON.stringify(updated));
@@ -92,7 +103,8 @@ export const addLibraryItem = (item) => {
 
 export const setLatestAnalysis = (item) => {
   try {
-    localStorage.setItem('latest_analysis_item', JSON.stringify(item));
+    const cleanItem = sanitizeForStorage(item);
+    localStorage.setItem('latest_analysis_item', JSON.stringify(cleanItem));
   } catch (e) {}
 };
 
