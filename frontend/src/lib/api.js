@@ -274,19 +274,10 @@ export function getPlatformAnalysis(primaryPlatform = "YouTube Shorts") {
 }
 
 export function getDemoAnalysis() {
-  return {
+  return enrichAnalysisData({
     virality_score: 84.5,
     model_confidence: 95.4,
     estimated_reach: "1,450,000+ views",
-    filename: "How_I_10xed_My_Views.mp4",
-    features: {
-      hook_speed: 84.5,
-      scene_cuts: 24,
-      audio_rms: 82,
-      transcript_wpm: 165,
-      text_overlay: 45,
-      color_vibrancy: 88,
-      aspect_ratio: "9:16 Vertical"
-    }
-  };
+    filename: "How_I_10xed_My_Views.mp4"
+  }, "How_I_10xed_My_Views.mp4", "demo", { targetPlatform: "Instagram Reels" });
 }

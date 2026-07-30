@@ -23,7 +23,7 @@ import MetricBreakdownTable from '../../../components/analysis/MetricBreakdownTa
 import ResultFooter from '../../../components/analysis/ResultFooter';
 
 import { getDemoAnalysis } from '../../../lib/api';
-import { getStoredUser, setStoredUser } from '../../../lib/storage';
+import { getStoredUser, setStoredUser, getLatestAnalysis } from '../../../lib/storage';
 
 export default function AnalysisResultPage() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -32,16 +32,19 @@ export default function AnalysisResultPage() {
 
   useEffect(() => {
     setCurrentUser(getStoredUser());
-    const data = getDemoAnalysis();
-    data.videoMeta = {
-      title: "How_I_10xed_My_Views.mp4",
-      platform: "Instagram Reels",
-      duration: "22 seconds",
-      date: "Analysed today",
-      resolution: "1080x1920 (9:16)",
-      size: "14.2 MB",
-      thumbnail: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=800&auto=format&fit=crop"
-    };
+    const latest = getLatestAnalysis();
+    const data = latest || getDemoAnalysis();
+    if (!data.videoMeta) {
+      data.videoMeta = {
+        title: data.filename || "How_I_10xed_My_Views.mp4",
+        platform: "Instagram Reels",
+        duration: "22 seconds",
+        date: "Analysed today",
+        resolution: "1080x1920 (9:16)",
+        size: "14.2 MB",
+        thumbnail: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=800&auto=format&fit=crop"
+      };
+    }
     setAnalysisData(data);
   }, []);
 

@@ -51,6 +51,7 @@ export const addHistoryItem = (item) => {
     };
     const updated = [formattedItem, ...current.filter(i => i.id !== formattedItem.id)].slice(0, 30);
     localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(updated));
+    setLatestAnalysis(formattedItem);
     return updated;
   } catch (e) {
     return [];
@@ -86,5 +87,20 @@ export const addLibraryItem = (item) => {
     return updated;
   } catch (e) {
     return [];
+  }
+};
+
+export const setLatestAnalysis = (item) => {
+  try {
+    localStorage.setItem('latest_analysis_item', JSON.stringify(item));
+  } catch (e) {}
+};
+
+export const getLatestAnalysis = () => {
+  try {
+    const data = localStorage.getItem('latest_analysis_item');
+    return data ? JSON.parse(data) : null;
+  } catch (e) {
+    return null;
   }
 };
