@@ -9,8 +9,10 @@ export default function WhatIfSimulator({ baseScore = 84.5 }) {
   const [boostAudio, setBoostAudio] = useState(false);
   const [addBroll, setAddBroll] = useState(true);
 
+  const numericBase = typeof baseScore === 'number' ? baseScore : parseFloat(baseScore) || 84.5;
+
   // Calculate simulated score adjustment
-  let simScore = baseScore;
+  let simScore = numericBase;
   if (shortenIntro) simScore += 4.5;
   if (addCaptions) simScore += 3.0;
   if (boostAudio) simScore += 2.5;
@@ -18,7 +20,7 @@ export default function WhatIfSimulator({ baseScore = 84.5 }) {
   simScore = Math.min(99.0, Number(simScore.toFixed(1)));
 
   return (
-    <div className="surface-card p-6 border-slate-200 bg-white text-left space-y-4 shadow-elevated">
+    <div id="what-if-simulator" className="surface-card p-6 border-slate-200 bg-white text-left space-y-4 shadow-elevated">
       <div className="flex items-center justify-between border-b border-slate-100 pb-3">
         <div className="flex items-center space-x-2">
           <div className="p-1.5 bg-indigo-50 text-indigo-600 rounded-lg">
@@ -84,7 +86,7 @@ export default function WhatIfSimulator({ baseScore = 84.5 }) {
         <div className="text-right">
           <span className="text-xs font-extrabold text-emerald-700 flex items-center space-x-1">
             <TrendingUp className="w-3.5 h-3.5" />
-            <span>+{(simScore - baseScore).toFixed(1)} Points</span>
+            <span>+{(simScore - numericBase).toFixed(1)} Points</span>
           </span>
           <span className="text-[10px] text-slate-500 font-medium">Estimated effect only</span>
         </div>

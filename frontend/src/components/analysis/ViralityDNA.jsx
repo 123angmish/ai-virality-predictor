@@ -4,22 +4,15 @@ import React from 'react';
 import { Dna, Sparkles } from 'lucide-react';
 
 export default function ViralityDNA({ dnaData }) {
-  const dna = dnaData || {
-    hookDNA: 88,
-    motionDNA: 82,
-    audioDNA: 84,
-    emotionDNA: 79,
-    pacingDNA: 86,
-    platformDNA: 90
-  };
+  const dna = dnaData || {};
 
   const metrics = [
-    { label: "Hook DNA", value: dna.hookDNA, color: "bg-brand-600" },
-    { label: "Motion DNA", value: dna.motionDNA, color: "bg-purple-600" },
-    { label: "Audio DNA", value: dna.audioDNA, color: "bg-blue-600" },
-    { label: "Emotion DNA", value: dna.emotionDNA, color: "bg-pink-600" },
-    { label: "Pacing DNA", value: dna.pacingDNA, color: "bg-indigo-600" },
-    { label: "Platform DNA", value: dna.platformDNA, color: "bg-emerald-600" }
+    { label: "Hook DNA", value: dna.hookDNA || 88, color: "bg-brand-600" },
+    { label: "Motion DNA", value: dna.motionDNA || 82, color: "bg-purple-600" },
+    { label: "Audio DNA", value: dna.audioDNA || 84, color: "bg-blue-600" },
+    { label: "Emotion DNA", value: dna.emotionDNA || 79, color: "bg-pink-600" },
+    { label: "Pacing DNA", value: dna.pacingDNA || 86, color: "bg-indigo-600" },
+    { label: "Platform DNA", value: dna.platformDNA || 90, color: "bg-emerald-600" }
   ];
 
   return (

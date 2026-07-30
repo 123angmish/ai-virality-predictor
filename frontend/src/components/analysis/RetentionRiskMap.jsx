@@ -4,7 +4,7 @@ import React from 'react';
 import { AlertCircle, Activity, Info } from 'lucide-react';
 
 export default function RetentionRiskMap({ riskMap }) {
-  const map = riskMap || [
+  const map = Array.isArray(riskMap) && riskMap.length > 0 ? riskMap : [
     { startSec: 0, endSec: 3, level: "High Attention", color: "bg-emerald-500", text: "Optimal 88% Retention" },
     { startSec: 3, endSec: 8, level: "Neutral", color: "bg-brand-500", text: "Steady Pacing" },
     { startSec: 8, endSec: 14, level: "High Attention", color: "bg-emerald-500", text: "Audio Peak & Kinetic Text" },
@@ -28,9 +28,9 @@ export default function RetentionRiskMap({ riskMap }) {
         {map.map((item, idx) => (
           <div key={idx} className="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between space-x-3 text-xs">
             <div className="flex items-center space-x-2.5">
-              <span className={`w-2.5 h-2.5 rounded-full ${item.color}`}></span>
+              <span className={`w-2.5 h-2.5 rounded-full ${item.color || 'bg-brand-500'}`}></span>
               <span className="font-extrabold text-slate-900">{item.startSec}s – {item.endSec}s</span>
-              <span className="text-slate-500 font-medium">({item.level})</span>
+              <span className="text-slate-500 font-medium">({item.level || 'Neutral'})</span>
             </div>
             <span className="text-slate-700 font-bold">{item.text}</span>
           </div>

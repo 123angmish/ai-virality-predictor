@@ -1,16 +1,11 @@
 'use client';
 
 import React from 'react';
-import { ShieldCheck, CheckCircle2, AlertCircle } from 'lucide-react';
+import { ShieldCheck, CheckCircle2 } from 'lucide-react';
 
 export default function ReliabilityPanel({ reliability }) {
-  const rel = reliability || {
-    framesAvailable: true,
-    audioProcessed: true,
-    transcriptProcessed: true,
-    metadataVerified: true,
-    dataCompleteness: 98
-  };
+  const rel = reliability || {};
+  const completeness = rel.dataCompleteness || 98;
 
   return (
     <div className="surface-card p-6 border-slate-200 bg-white text-left space-y-4 shadow-elevated">
@@ -22,7 +17,7 @@ export default function ReliabilityPanel({ reliability }) {
           <h3 className="text-sm font-extrabold text-slate-900">Analysis Data Reliability</h3>
         </div>
         <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-          {rel.dataCompleteness}% Complete
+          {completeness}% Complete
         </span>
       </div>
 

@@ -6,7 +6,7 @@ import { Sparkles, Trophy, CheckCircle2, AlertTriangle, ArrowRight, ChevronDown,
 export default function PlatformFitComparison({ platforms }) {
   const [expandedId, setExpandedId] = useState('tiktok');
 
-  const list = platforms || [
+  const list = Array.isArray(platforms) && platforms.length > 0 ? platforms : [
     {
       id: "tiktok",
       name: "TikTok",
@@ -84,7 +84,8 @@ export default function PlatformFitComparison({ platforms }) {
     }
   ];
 
-  const bestMatch = list[0];
+  const bestMatch = list[0] || {};
+  const selectedPlatform = list.find(p => p.id === expandedId) || list[0];
 
   return (
     <div id="platform-fit" className="surface-card p-6 border-slate-200 bg-white text-left space-y-6 shadow-elevated">
@@ -109,14 +110,14 @@ export default function PlatformFitComparison({ platforms }) {
             <Trophy className="w-4 h-4 text-yellow-300" />
             <span className="text-xs font-black uppercase tracking-wider text-yellow-300">Best Platform Match</span>
           </div>
-          <h4 className="text-xl font-black">{bestMatch.name}</h4>
+          <h4 className="text-xl font-black">{bestMatch.name || "TikTok"}</h4>
           <p className="text-xs text-slate-300 font-medium">
-            Strongest overall algorithm readiness score ({bestMatch.score}% Compatibility).
+            Strongest overall algorithm readiness score ({bestMatch.score || 92}% Compatibility).
           </p>
         </div>
 
         <button
-          onClick={() => setExpandedId(bestMatch.id)}
+          onClick={() => setExpandedId(bestMatch.id || 'tiktok')}
           className="px-4 py-2.5 bg-white text-slate-900 font-extrabold text-xs rounded-xl shadow-xs transition-all hover:bg-slate-100"
         >
           Open Platform Editing Plan
@@ -127,6 +128,8 @@ export default function PlatformFitComparison({ platforms }) {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
         {list.map((p) => {
           const isExpanded = expandedId === p.id;
+          const issueText = p.issue || (Array.isArray(p.gaps) ? p.gaps[0] : "Optimization recommended");
+
           return (
             <div
               key={p.id}
@@ -136,7 +139,7 @@ export default function PlatformFitComparison({ platforms }) {
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className={`text-[10px] font-black px-2 py-0.5 rounded-md ${p.color}`}>
+                <span className={`text-[10px] font-black px-2 py-0.5 rounded-md ${p.color || 'bg-slate-900 text-white'}`}>
                   {p.name}
                 </span>
                 <span className="text-xs font-black text-slate-900">{p.score}%</span>
@@ -144,7 +147,7 @@ export default function PlatformFitComparison({ platforms }) {
 
               <div className="space-y-1">
                 <span className="text-[11px] font-extrabold text-slate-800 block truncate">{p.fit}</span>
-                <span className="text-[10px] text-red-600 font-semibold block truncate">⚠️ {p.issue}</span>
+                <span className="text-[10px] text-red-600 font-semibold block truncate">⚠️ {issueText}</span>
               </div>
 
               <button className="text-[11px] font-extrabold text-brand-600 hover:underline flex items-center space-x-1 pt-1">
@@ -157,19 +160,19 @@ export default function PlatformFitComparison({ platforms }) {
       </div>
 
       {/* Expandable Platform Action Drawer */}
-      {expandedId && (
+      {expandedId && selectedPlatform && (
         <div className="p-5 bg-slate-50 border border-slate-200 rounded-2xl space-y-3 animate-fade-in">
           <div className="flex items-center justify-between border-b border-slate-200 pb-2">
             <h4 className="text-xs font-black uppercase text-slate-900 tracking-wider">
-              Actionable Editing Blueprint: {list.find(p => p.id === expandedId)?.name}
+              Actionable Editing Blueprint: {selectedPlatform.name}
             </h4>
             <span className="text-xs font-bold text-brand-600">
-              Score: {list.find(p => p.id === expandedId)?.score}%
+              Score: {selectedPlatform.score}%
             </span>
           </div>
 
           <ul className="space-y-2 text-xs font-semibold text-slate-800">
-            {list.find(p => p.id === expandedId)?.actions.map((act, aIdx) => (
+            {Array.isArray(selectedPlatform.actions) && selectedPlatform.actions.map((act, aIdx) => (
               <li key={aIdx} className="flex items-start space-x-2">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0 mt-0.5" />
                 <span>{act}</span>

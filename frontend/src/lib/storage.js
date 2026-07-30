@@ -1,6 +1,6 @@
 /**
  * Storage Manager for AI Virality Predictor
- * Manages persistence for analyses, user session, video library, and preferences safely.
+ * Manages persistence for analyses, user session, video library, and preferences safely with SSR guards.
  */
 
 const STORAGE_KEYS = {
@@ -22,6 +22,7 @@ const sanitizeForStorage = (obj) => {
 
 export const getStoredUser = () => {
   try {
+    if (typeof window === 'undefined') return null;
     const data = localStorage.getItem(STORAGE_KEYS.USER);
     return data ? JSON.parse(data) : null;
   } catch (e) {
@@ -31,6 +32,7 @@ export const getStoredUser = () => {
 
 export const setStoredUser = (user) => {
   try {
+    if (typeof window === 'undefined') return;
     if (user) {
       localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
     } else {
@@ -41,6 +43,7 @@ export const setStoredUser = (user) => {
 
 export const getStoredHistory = () => {
   try {
+    if (typeof window === 'undefined') return [];
     const data = localStorage.getItem(STORAGE_KEYS.HISTORY);
     return data ? JSON.parse(data) : [];
   } catch (e) {
@@ -50,6 +53,7 @@ export const getStoredHistory = () => {
 
 export const addHistoryItem = (item) => {
   try {
+    if (typeof window === 'undefined') return [];
     const cleanItem = sanitizeForStorage(item);
     const current = getStoredHistory();
     const formattedItem = {
@@ -70,12 +74,14 @@ export const addHistoryItem = (item) => {
 
 export const clearStoredHistory = () => {
   try {
+    if (typeof window === 'undefined') return;
     localStorage.removeItem(STORAGE_KEYS.HISTORY);
   } catch (e) {}
 };
 
 export const getStoredLibrary = () => {
   try {
+    if (typeof window === 'undefined') return [];
     const data = localStorage.getItem(STORAGE_KEYS.LIBRARY);
     return data ? JSON.parse(data) : [];
   } catch (e) {
@@ -85,6 +91,7 @@ export const getStoredLibrary = () => {
 
 export const addLibraryItem = (item) => {
   try {
+    if (typeof window === 'undefined') return [];
     const cleanItem = sanitizeForStorage(item);
     const current = getStoredLibrary();
     const newItem = {
@@ -103,6 +110,7 @@ export const addLibraryItem = (item) => {
 
 export const setLatestAnalysis = (item) => {
   try {
+    if (typeof window === 'undefined') return;
     const cleanItem = sanitizeForStorage(item);
     localStorage.setItem('latest_analysis_item', JSON.stringify(cleanItem));
   } catch (e) {}
@@ -110,6 +118,7 @@ export const setLatestAnalysis = (item) => {
 
 export const getLatestAnalysis = () => {
   try {
+    if (typeof window === 'undefined') return null;
     const data = localStorage.getItem('latest_analysis_item');
     return data ? JSON.parse(data) : null;
   } catch (e) {

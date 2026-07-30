@@ -6,18 +6,12 @@ import { Zap, Sparkles, Copy, Check, Eye } from 'lucide-react';
 export default function HookLab({ hookData }) {
   const [copiedIdx, setCopiedIdx] = React.useState(-1);
 
-  const data = hookData || {
-    hookPeriod: "0-3 Seconds",
-    curiosityScore: 88,
-    clarityScore: 92,
-    emotionalPull: "High Curiosity",
-    hookAssessment: "Strong visual hook with immediate creator face framing and direct camera gaze.",
-    alternativeHooks: [
-      "\"99% of creators fail at short-form content because of this single 3-second mistake...\"",
-      "\"I tested 50 short-form video hooks in 30 days — here is the #1 winner...\"",
-      "\"Stop scrolling if your views are stuck under 1,000 views...\""
-    ]
-  };
+  const data = hookData || {};
+  const alternativeHooks = Array.isArray(data.alternativeHooks) ? data.alternativeHooks : [
+    "\"99% of creators fail at short-form content because of this single 3-second mistake...\"",
+    "\"I tested 50 short-form video hooks in 30 days — here is the #1 winner...\"",
+    "\"Stop scrolling if your views are stuck under 1,000 views...\""
+  ];
 
   const handleCopy = (text, idx) => {
     navigator.clipboard.writeText(text);
@@ -26,7 +20,7 @@ export default function HookLab({ hookData }) {
   };
 
   return (
-    <div className="surface-card p-6 border-slate-200 bg-white text-left space-y-4 shadow-elevated">
+    <div id="hook-lab" className="surface-card p-6 border-slate-200 bg-white text-left space-y-4 shadow-elevated">
       <div className="flex items-center justify-between border-b border-slate-100 pb-3">
         <div className="flex items-center space-x-2">
           <div className="p-1.5 bg-brand-50 text-brand-600 rounded-lg">
@@ -35,7 +29,7 @@ export default function HookLab({ hookData }) {
           <h3 className="text-sm font-extrabold text-slate-900">Hook Lab (First 3 Seconds)</h3>
         </div>
         <span className="text-[10px] font-bold bg-brand-50 text-brand-700 px-2 py-0.5 rounded-full border border-brand-200">
-          {data.hookPeriod}
+          {data.hookPeriod || "0-3 Seconds"}
         </span>
       </div>
 
@@ -43,22 +37,22 @@ export default function HookLab({ hookData }) {
       <div className="grid grid-cols-3 gap-3">
         <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 space-y-1">
           <span className="text-[10px] font-extrabold text-slate-400 uppercase">Curiosity</span>
-          <div className="text-sm font-black text-slate-900">{data.curiosityScore} / 100</div>
+          <div className="text-sm font-black text-slate-900">{data.curiosityScore || 88} / 100</div>
         </div>
 
         <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 space-y-1">
           <span className="text-[10px] font-extrabold text-slate-400 uppercase">Clarity</span>
-          <div className="text-sm font-black text-slate-900">{data.clarityScore} / 100</div>
+          <div className="text-sm font-black text-slate-900">{data.clarityScore || 92} / 100</div>
         </div>
 
         <div className="p-3 bg-slate-50 rounded-xl border border-slate-100 space-y-1">
           <span className="text-[10px] font-extrabold text-slate-400 uppercase">Pull</span>
-          <div className="text-sm font-black text-emerald-600">{data.emotionalPull}</div>
+          <div className="text-sm font-black text-emerald-600">{data.emotionalPull || "High Curiosity"}</div>
         </div>
       </div>
 
       <p className="text-xs text-slate-600 font-medium bg-slate-50 p-3 rounded-xl border border-slate-100">
-        💡 <strong>Visual Hook Assessment:</strong> {data.hookAssessment}
+        💡 <strong>Visual Hook Assessment:</strong> {data.hookAssessment || "Strong visual hook with immediate creator face framing."}
       </p>
 
       {/* 3 AI Alternative Hooks */}
@@ -67,7 +61,7 @@ export default function HookLab({ hookData }) {
           3 Recommended Alternative Hook Openings:
         </span>
         
-        {data.alternativeHooks.map((alt, idx) => (
+        {alternativeHooks.map((alt, idx) => (
           <div key={idx} className="p-3 bg-brand-50/40 border border-brand-100 rounded-xl flex items-center justify-between space-x-3 group">
             <span className="text-xs text-slate-800 font-bold leading-snug">{alt}</span>
             <button
