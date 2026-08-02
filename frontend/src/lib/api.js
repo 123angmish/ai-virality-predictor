@@ -5,6 +5,22 @@
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://ai-virality-predictor.onrender.com";
 
+// Global in-memory storage for active uploaded video Blob URL across routes
+let activeLocalBlobUrl = null;
+
+export function setActiveBlobUrl(url) {
+  activeLocalBlobUrl = url;
+  if (typeof window !== 'undefined') {
+    window.__active_blob_url = url;
+  }
+}
+
+export function getActiveBlobUrl() {
+  if (activeLocalBlobUrl) return activeLocalBlobUrl;
+  if (typeof window !== 'undefined' && window.__active_blob_url) return window.__active_blob_url;
+  return null;
+}
+
 export async function fetchModelStatus() {
   try {
     const controller = new AbortController();
@@ -23,6 +39,33 @@ export async function fetchModelStatus() {
       backend_url: API_BASE_URL
     };
   }
+}
+
+export function parseVideoUrlMetadata(url = '') {
+  let youtubeEmbedUrl = null;
+  let youtubeThumbnail = null;
+  let cleanTitle = "Short-Form Video Analysis";
+
+  if (url.includes('youtube.com') || url.includes('youtu.be')) {
+    const ytMatch = url.match(/(?:shorts\/|v=|youtu\.be\/|embed\/)([a-zA-Z0-9_-]{11})/);
+    if (ytMatch && ytMatch[1]) {
+      const id = ytMatch[1];
+      youtubeEmbedUrl = `https://www.youtube.com/embed/${id}?autoplay=0`;
+      youtubeThumbnail = `https://img.youtube.com/vi/${id}/hqdefault.jpg`;
+      cleanTitle = `YouTube Shorts (${id})`;
+    } else {
+      cleanTitle = "YouTube Shorts Viral Audit";
+    }
+  } else if (url.includes('tiktok')) {
+    cleanTitle = "TikTok Hook Pacing Analysis";
+  } else if (url.includes('reel') || url.includes('instagram')) {
+    cleanTitle = "Instagram Reel Creator Analysis";
+  } else if (url.includes('facebook')) {
+    cleanTitle = "Facebook Reel Creator Analysis";
+  } else if (url) {
+    cleanTitle = url.length > 40 ? url.slice(0, 40) + "..." : url;
+  }
+  return { youtubeEmbedUrl, youtubeThumbnail, cleanTitle };
 }
 
 export async function analyzeVideoUrl(url, extraOptions = {}) {
@@ -45,6 +88,9 @@ export async function analyzeVideoUrl(url, extraOptions = {}) {
 }
 
 export async function analyzeVideoUpload(file, extraOptions = {}) {
+  const blobUrl = URL.createObjectURL(file);
+  setActiveBlobUrl(blobUrl);
+
   try {
     const formData = new FormData();
     formData.append('file', file);
@@ -60,7 +106,7 @@ export async function analyzeVideoUpload(file, extraOptions = {}) {
     clearTimeout(timeout);
     if (!res.ok) throw new Error("Video upload analysis failed");
     const data = await res.json();
-    return enrichAnalysisData(data, file.name, 'upload', extraOptions);
+    return enrichAnalysisData(data, file.name, 'upload', { ...extraOptions, blobUrl, fileSize: file.size });
   } catch (err) {
     const customData = {
       filename: file.name,
@@ -68,34 +114,31 @@ export async function analyzeVideoUpload(file, extraOptions = {}) {
         title: file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " "),
         size: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
         isLocalFile: true,
-        blobUrl: URL.createObjectURL(file)
+        blobUrl: blobUrl
       }
     };
-    return enrichAnalysisData(customData, file.name, 'upload', extraOptions);
+    return enrichAnalysisData(customData, file.name, 'upload', { ...extraOptions, blobUrl, fileSize: file.size });
   }
 }
 
 export function enrichAnalysisData(data = {}, sourceName = "video_analysis.mp4", sourceType = "url", options = {}) {
   const targetPlatform = options.targetPlatform || "YouTube Shorts";
   const category = options.contentCategory || "Education & Tech";
-  const goal = options.videoGoal || "Maximize Reach & Virality";
 
-  // Derive dynamic clean title from URL or file name
-  let cleanTitle = data.videoMeta?.title || sourceName;
-  if (sourceType === 'url') {
-    if (sourceName.includes('shorts')) cleanTitle = "YouTube Shorts Viral Audit";
-    else if (sourceName.includes('tiktok')) cleanTitle = "TikTok Hook Pacing Analysis";
-    else if (sourceName.includes('reel') || sourceName.includes('instagram')) cleanTitle = "Instagram Reel Creator Analysis";
-    else cleanTitle = "Short-Form Video Analysis";
-  } else {
-    cleanTitle = cleanTitle.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
+  // Extract clean title and video embed URLs
+  const urlMeta = parseVideoUrlMetadata(sourceName);
+  let cleanTitle = data.videoMeta?.title || urlMeta.cleanTitle;
+  if (sourceType !== 'url') {
+    cleanTitle = sourceName.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
   }
 
-  // Calculate dynamic score variations based on title hash length to guarantee video-specific metrics
+  // Calculate dynamic score variations based on title hash length
   const charSum = sourceName.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
   const baseScore = data.virality_score || Math.min(96, Math.max(74, 82 + (charSum % 14)));
   const hookScore = Math.min(98, Math.max(76, baseScore + (charSum % 7) - 3));
   const audioScore = Math.min(95, Math.max(72, baseScore - (charSum % 5) + 2));
+
+  const localBlobUrl = options.blobUrl || getActiveBlobUrl() || data.videoMeta?.blobUrl;
 
   return {
     id: `analysis-${Date.now()}`,
@@ -106,7 +149,7 @@ export function enrichAnalysisData(data = {}, sourceName = "video_analysis.mp4",
     estimated_reach: `${(baseScore * 18000).toLocaleString()}+ views`,
     filename: data.filename || sourceName,
     timestamps: data.timestamps || [
-      { time: "0:01", label: `Hook Capture: "${cleanTitle.slice(0, 20)}"`, score: Math.min(99, hookScore + 4), status: "optimal" },
+      { time: "0:01", label: `Hook Capture: "${cleanTitle.slice(0, 22)}"`, score: Math.min(99, hookScore + 4), status: "optimal" },
       { time: "0:05", label: `Visual Pacing & Captions`, score: Math.max(70, hookScore - 5), status: "good" },
       { time: "0:12", label: `Audio Peak & RMS Drop`, score: audioScore, status: "viral" },
       { time: "0:17", label: `Retention Monotony Risk`, score: Math.max(62, baseScore - 18), status: "warning" },
@@ -126,7 +169,7 @@ export function enrichAnalysisData(data = {}, sourceName = "video_analysis.mp4",
       faceCount: 1,
       sceneEnvironment: `${category} Studio Framing`,
       lightingQuality: "High Contrast (88% Brightness)",
-      speechTranscript: `"If you want your content in ${cleanTitle} to go viral, here is the exact hook breakdown..."`,
+      speechTranscript: `"If you want your content in ${cleanTitle} to go viral, here is the exact hook framework..."`,
       detectedTextOverlays: [`"${cleanTitle.toUpperCase().slice(0, 22)}"`, '"MUST WATCH"', '"VIRAL STEP #1"'],
       sceneFrames: [
         { time: "0:01", scene: "Opening Hook", detail: `Visual framing for ${cleanTitle}. High optical flow motion.` },
@@ -146,8 +189,11 @@ export function enrichAnalysisData(data = {}, sourceName = "video_analysis.mp4",
       platform: targetPlatform,
       duration: "0:22s",
       resolution: "1080x1920 (9:16)",
-      size: data.videoMeta?.size || "14.2 MB",
-      thumbnail: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=800&auto=format&fit=crop"
+      size: options.fileSize ? `${(options.fileSize / (1024 * 1024)).toFixed(1)} MB` : "14.2 MB",
+      isLocalFile: Boolean(localBlobUrl),
+      blobUrl: localBlobUrl,
+      youtubeEmbedUrl: urlMeta.youtubeEmbedUrl,
+      thumbnail: urlMeta.youtubeThumbnail || "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=800&auto=format&fit=crop"
     },
     hookLab: {
       hookPeriod: "0-3 Seconds",
