@@ -1,22 +1,33 @@
+'use client';
+
 import React, { useState } from 'react';
 import { AlertTriangle, CheckCircle2, RefreshCw, Sparkles, X, ChevronRight, Layers } from 'lucide-react';
 
-export default function PlatformTabs({ platforms = {} }) {
+export default function PlatformTabs({ platforms }) {
   const platformKeys = [
     { key: 'tiktok', label: 'TikTok', icon: '🎵', badgeBg: 'bg-slate-900', textColor: 'text-cyan-400', borderColor: 'border-cyan-500/40' },
-    { key: 'youtube_shorts', label: 'YouTube Shorts', icon: '▶️', badgeBg: 'bg-red-600', textColor: 'text-white', borderColor: 'border-red-400' },
-    { key: 'instagram_reels', label: 'Instagram Reels', icon: '📸', badgeBg: 'bg-pink-600', textColor: 'text-white', borderColor: 'border-pink-400' },
-    { key: 'twitter_x', label: 'Twitter / X', icon: '𝕏', badgeBg: 'bg-slate-800', textColor: 'text-white', borderColor: 'border-slate-600' },
-    { key: 'facebook', label: 'Facebook', icon: '👍', badgeBg: 'bg-blue-600', textColor: 'text-white', borderColor: 'border-blue-400' }
+    { key: 'shorts', label: 'YouTube Shorts', icon: '▶️', badgeBg: 'bg-red-600', textColor: 'text-white', borderColor: 'border-red-400' },
+    { key: 'reels', label: 'Instagram Reels', icon: '📸', badgeBg: 'bg-pink-600', textColor: 'text-white', borderColor: 'border-pink-400' },
+    { key: 'facebook', label: 'Facebook Reels', icon: '👍', badgeBg: 'bg-blue-600', textColor: 'text-white', borderColor: 'border-blue-400' },
+    { key: 'x', label: 'Twitter / X', icon: '𝕏', badgeBg: 'bg-slate-800', textColor: 'text-white', borderColor: 'border-slate-600' }
   ];
 
   const [activeModalKey, setActiveModalKey] = useState(null);
 
-  const selectedPlatformData = activeModalKey ? (platforms[activeModalKey] || {}) : null;
+  // Helper to extract platform item whether platforms is an Array or Object
+  const getPlatformItem = (key) => {
+    if (!platforms) return null;
+    if (Array.isArray(platforms)) {
+      return platforms.find(p => p.id === key || p.name?.toLowerCase().includes(key));
+    }
+    return platforms[key];
+  };
+
+  const selectedPlatformData = activeModalKey ? getPlatformItem(activeModalKey) : null;
   const selectedMeta = activeModalKey ? platformKeys.find(p => p.key === activeModalKey) : null;
 
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-6">
+    <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-6 text-left">
       
       {/* Title Header */}
       <div className="flex items-center justify-between border-b border-slate-100 pb-3">
@@ -41,8 +52,8 @@ export default function PlatformTabs({ platforms = {} }) {
       {/* 5 BIG PROMINENT PLATFORM CARDS GRID (NO HORIZONTAL SCROLL) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
         {platformKeys.map((p) => {
-          const pData = platforms[p.key] || {};
-          const score = pData.match_percentage || 85.0;
+          const pData = getPlatformItem(p.key) || {};
+          const score = pData.score || pData.match_percentage || 85.0;
 
           return (
             <div
@@ -99,7 +110,7 @@ export default function PlatformTabs({ platforms = {} }) {
                       {selectedMeta.label} Diagnostic Plan
                     </h3>
                     <span className="bg-emerald-100 text-emerald-800 text-xs font-extrabold px-2.5 py-0.5 rounded-full border border-emerald-300">
-                      {selectedPlatformData.match_percentage}% Match
+                      {selectedPlatformData.score || selectedPlatformData.match_percentage || 85}% Match
                     </span>
                   </div>
                   <p className="text-xs text-slate-500 font-medium">
@@ -126,10 +137,10 @@ export default function PlatformTabs({ platforms = {} }) {
                 </h4>
               </div>
               <div className="space-y-2">
-                {(selectedPlatformData.gaps || []).map((gap, idx) => (
+                {(selectedPlatformData.gaps || [selectedPlatformData.issue || 'Optimization recommended']).map((gap, idx) => (
                   <div
                     key={idx}
-                    className="bg-red-50/70 border border-red-200 rounded-xl p-3.5 text-xs text-red-950 font-medium flex items-start space-x-2.5"
+                    className="bg-red-50/70 border border-red-200 rounded-xl p-3.5 text-xs text-red-950 font-medium flex items-start space-x-2.5 text-left"
                   >
                     <span className="w-2 h-2 rounded-full bg-red-500 mt-1 flex-shrink-0"></span>
                     <span>{gap}</span>
@@ -149,10 +160,10 @@ export default function PlatformTabs({ platforms = {} }) {
                 </h4>
               </div>
               <div className="space-y-2">
-                {(selectedPlatformData.action_plan || []).map((action, idx) => (
+                {(selectedPlatformData.actions || selectedPlatformData.action_plan || []).map((action, idx) => (
                   <div
                     key={idx}
-                    className="bg-emerald-50/70 border border-emerald-200 rounded-xl p-3.5 text-xs text-emerald-950 font-medium flex items-start space-x-2.5"
+                    className="bg-emerald-50/70 border border-emerald-200 rounded-xl p-3.5 text-xs text-emerald-950 font-medium flex items-start space-x-2.5 text-left"
                   >
                     <span className="w-5 h-5 rounded-full bg-emerald-600 text-white font-extrabold text-[10px] flex items-center justify-center flex-shrink-0">
                       {idx + 1}
@@ -174,10 +185,13 @@ export default function PlatformTabs({ platforms = {} }) {
                 </h4>
               </div>
               <div className="space-y-2">
-                {(selectedPlatformData.re_editing_strategy || []).map((strat, idx) => (
+                {(selectedPlatformData.revival || selectedPlatformData.re_editing_strategy || [
+                  "Peak Posting Window: 6:00 PM – 9:00 PM",
+                  "Reply to top 3 comments with video replies within 1 hour"
+                ]).map((strat, idx) => (
                   <div
                     key={idx}
-                    className="bg-blue-50/70 border border-blue-200 rounded-xl p-3.5 text-xs text-blue-950 font-medium flex items-start space-x-2.5"
+                    className="bg-blue-50/70 border border-blue-200 rounded-xl p-3.5 text-xs text-blue-950 font-medium flex items-start space-x-2.5 text-left"
                   >
                     <Sparkles className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
                     <span>{strat}</span>
