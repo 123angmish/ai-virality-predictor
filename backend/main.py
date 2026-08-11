@@ -275,6 +275,7 @@ def predict_virality(features: Dict[str, Any]) -> Dict[str, Any]:
         "estimated_reach": f"{est_reach:,}+ views",
         "model_confidence": "94.2%",
         "features": features,
+        "video_summary": features.get("video_summary"),
         "platforms": platforms,
         "timestamps": timestamps,
         "dataset_info": metadata

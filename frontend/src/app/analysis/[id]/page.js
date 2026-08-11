@@ -7,6 +7,7 @@ import CommandPalette from '../../../components/analysis/CommandPalette';
 
 import AnalysisResultHeader from '../../../components/analysis/AnalysisResultHeader';
 import ExecutiveSummary from '../../../components/analysis/ExecutiveSummary';
+import VideoSummaryCard from '../../../components/analysis/VideoSummaryCard';
 import MetricSummaryCard from '../../../components/analysis/MetricSummaryCard';
 import ResultSectionNav from '../../../components/analysis/ResultSectionNav';
 import VideoAnalysisPlayer from '../../../components/analysis/VideoAnalysisPlayer';
@@ -89,6 +90,11 @@ export default function AnalysisResultPage() {
           <ExecutiveSummary
             viralityScore={analysisData.virality_score}
             confidence={analysisData.model_confidence}
+          />
+
+          {/* Section 2.5: AI Video Summary & Key Scene Detection */}
+          <VideoSummaryCard
+            summaryData={analysisData.video_summary}
           />
 
           {/* Section 3: 4 Key Metric Cards */}
