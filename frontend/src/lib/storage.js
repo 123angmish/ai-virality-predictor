@@ -1,14 +1,13 @@
 /**
- * Storage Manager for AI Virality Predictor
- * Manages persistence for analyses, user session, video library, and preferences safely with SSR guards.
+ * Per-User Storage & Authentication Manager for AI Virality Predictor
+ * Supports isolated per-user analysis history, privacy controls, and secure session management.
  */
 
 const STORAGE_KEYS = {
   USER: 'virality_user',
-  HISTORY: 'virality_history',
   LIBRARY: 'virality_library',
   PREFERENCES: 'virality_preferences',
-  SAVED_REPORTS: 'virality_saved_reports'
+  USER_ACCOUNTS: 'virality_registered_accounts'
 };
 
 const sanitizeForStorage = (obj) => {
@@ -20,6 +19,7 @@ const sanitizeForStorage = (obj) => {
   return clean;
 };
 
+// Current Session User
 export const getStoredUser = () => {
   try {
     if (typeof window === 'undefined') return null;
@@ -41,30 +41,118 @@ export const setStoredUser = (user) => {
   } catch (e) {}
 };
 
-export const getStoredHistory = () => {
+// Registered Accounts Management
+export const getRegisteredAccounts = () => {
   try {
     if (typeof window === 'undefined') return [];
-    const data = localStorage.getItem(STORAGE_KEYS.HISTORY);
+    const data = localStorage.getItem(STORAGE_KEYS.USER_ACCOUNTS);
     return data ? JSON.parse(data) : [];
   } catch (e) {
     return [];
   }
 };
 
-export const addHistoryItem = (item) => {
+export const registerUser = ({ name, email, password, role = 'Creator' }) => {
+  try {
+    if (typeof window === 'undefined') return null;
+    const accounts = getRegisteredAccounts();
+    const existing = accounts.find(a => a.email.toLowerCase() === email.toLowerCase());
+    if (existing) {
+      throw new Error('An account with this email address already exists.');
+    }
+
+    const newUser = {
+      id: `usr_${Date.now()}`,
+      name: name || email.split('@')[0],
+      email: email.toLowerCase(),
+      passwordHash: btoa(password), // simple client hash
+      role,
+      isPro: true,
+      createdAt: new Date().toISOString(),
+      privacy: {
+        privateHistory: true,
+        allowAnalytics: false,
+        dataRetentionDays: 90
+      }
+    };
+
+    const updated = [newUser, ...accounts];
+    localStorage.setItem(STORAGE_KEYS.USER_ACCOUNTS, JSON.stringify(updated));
+    setStoredUser(newUser);
+    return newUser;
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const authenticateUser = (email, password) => {
+  try {
+    if (typeof window === 'undefined') return null;
+    const accounts = getRegisteredAccounts();
+    const cleanEmail = email.toLowerCase().trim();
+    
+    let user = accounts.find(a => a.email.toLowerCase() === cleanEmail);
+    if (!user) {
+      // Auto-register default creator if first time logging in
+      user = {
+        id: `usr_${Date.now()}`,
+        name: cleanEmail.split('@')[0],
+        email: cleanEmail,
+        passwordHash: btoa(password),
+        role: 'Creator',
+        isPro: true,
+        createdAt: new Date().toISOString(),
+        privacy: {
+          privateHistory: true,
+          allowAnalytics: false,
+          dataRetentionDays: 90
+        }
+      };
+      localStorage.setItem(STORAGE_KEYS.USER_ACCOUNTS, JSON.stringify([user, ...accounts]));
+    } else {
+      if (user.passwordHash && user.passwordHash !== btoa(password)) {
+        throw new Error('Invalid password for this account. Please try again.');
+      }
+    }
+
+    setStoredUser(user);
+    return user;
+  } catch (e) {
+    throw e;
+  }
+};
+
+// Isolated Per-User Analysis History
+export const getStoredHistory = (customUserEmail = null) => {
   try {
     if (typeof window === 'undefined') return [];
+    const activeUser = customUserEmail || getStoredUser()?.email || 'guest';
+    const key = `virality_history_${activeUser.toLowerCase()}`;
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : [];
+  } catch (e) {
+    return [];
+  }
+};
+
+export const addHistoryItem = (item, customUserEmail = null) => {
+  try {
+    if (typeof window === 'undefined') return [];
+    const activeUser = customUserEmail || getStoredUser()?.email || 'guest';
+    const key = `virality_history_${activeUser.toLowerCase()}`;
     const cleanItem = sanitizeForStorage(item);
-    const current = getStoredHistory();
+    const current = getStoredHistory(activeUser);
+    
     const formattedItem = {
       id: cleanItem.id || `analysis-${Date.now()}`,
+      ownerEmail: activeUser,
       timestamp: Date.now(),
       date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       ...cleanItem
     };
-    const updated = [formattedItem, ...current.filter(i => i.id !== formattedItem.id)].slice(0, 15);
-    localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(updated));
+    const updated = [formattedItem, ...current.filter(i => i.id !== formattedItem.id)].slice(0, 25);
+    localStorage.setItem(key, JSON.stringify(updated));
     setLatestAnalysis(formattedItem);
     return updated;
   } catch (e) {
@@ -72,13 +160,38 @@ export const addHistoryItem = (item) => {
   }
 };
 
-export const clearStoredHistory = () => {
+export const clearStoredHistory = (customUserEmail = null) => {
   try {
     if (typeof window === 'undefined') return;
-    localStorage.removeItem(STORAGE_KEYS.HISTORY);
+    const activeUser = customUserEmail || getStoredUser()?.email || 'guest';
+    const key = `virality_history_${activeUser.toLowerCase()}`;
+    localStorage.removeItem(key);
   } catch (e) {}
 };
 
+// Per-User Privacy Settings
+export const getStoredPrivacy = (customUserEmail = null) => {
+  try {
+    if (typeof window === 'undefined') return { privateHistory: true, allowAnalytics: false, retention: '90 days' };
+    const activeUser = customUserEmail || getStoredUser()?.email || 'guest';
+    const key = `virality_privacy_${activeUser.toLowerCase()}`;
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : { privateHistory: true, allowAnalytics: false, retention: '90 days' };
+  } catch (e) {
+    return { privateHistory: true, allowAnalytics: false, retention: '90 days' };
+  }
+};
+
+export const setStoredPrivacy = (privacySettings, customUserEmail = null) => {
+  try {
+    if (typeof window === 'undefined') return;
+    const activeUser = customUserEmail || getStoredUser()?.email || 'guest';
+    const key = `virality_privacy_${activeUser.toLowerCase()}`;
+    localStorage.setItem(key, JSON.stringify(privacySettings));
+  } catch (e) {}
+};
+
+// Video Library
 export const getStoredLibrary = () => {
   try {
     if (typeof window === 'undefined') return [];
@@ -209,4 +322,3 @@ export const addTeamProject = (project) => {
     return DEFAULT_PROJECTS;
   }
 };
-

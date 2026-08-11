@@ -14,8 +14,9 @@ export default function HistoryPage() {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    setCurrentUser(getStoredUser());
-    setHistoryList(getStoredHistory());
+    const user = getStoredUser();
+    setCurrentUser(user);
+    setHistoryList(getStoredHistory(user?.email));
   }, []);
 
   const handleNavigate = (route) => {
@@ -23,7 +24,7 @@ export default function HistoryPage() {
   };
 
   const handleClear = () => {
-    clearStoredHistory();
+    clearStoredHistory(currentUser?.email);
     setHistoryList([]);
   };
 
