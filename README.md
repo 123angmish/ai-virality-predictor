@@ -1,114 +1,119 @@
 # 🚀 AI Virality Predictor & Multi-Platform Optimizer
 
-[![Python](https://img.shields.io/badge/Python-3.10-blue.svg)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.104.0-009688.svg)](https://fastapi.tiangolo.com/)
-[![Next.js](https://img.shields.io/badge/Next.js-14.2.35-black.svg)](https://nextjs.org/)
-[![OpenCV](https://img.shields.io/badge/OpenCV-Computer%20Vision-5C3EE8.svg)](https://opencv.org/)
-[![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-HistGradientBoosting-F7931E.svg)](https://scikit-learn.org/)
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg)](https://www.docker.com/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel%20Production-10B981?style=for-the-badge&logo=vercel)](https://ai-virality-predictor.vercel.app/)
+[![API Docs](https://img.shields.io/badge/FastAPI%20Docs-Render%20Cloud-0284C7?style=for-the-badge&logo=fastapi)](https://ai-virality-predictor.onrender.com/docs)
+[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-14.2-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![OpenCV](https://img.shields.io/badge/OpenCV-Computer%20Vision-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)](https://opencv.org/)
+[![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-HistGradientBoosting-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
 
-An end-to-end, production-grade application that predicts the viral potential of short-form videos using **Computer Vision (OpenCV)**, **Audio Signal Processing (Librosa)**, and **Machine Learning** trained on real-world video performance datasets (Kaggle & Hugging Face). 
-
-The platform generates platform-specific, actionable optimization plans for **TikTok**, **YouTube Shorts**, **Instagram Reels**, **Twitter / X**, and **Facebook**.
+> **Topics & Tags**: `machine-learning` • `computer-vision` • `fastapi` • `nextjs` • `python` • `opencv` • `librosa` • `virality-predictor` • `video-intelligence` • `social-media-ai` • `youtube-shorts` • `tiktok-algorithm` • `instagram-reels` • `scikit-learn` • `tailwind-css`
 
 ---
 
-## ✨ Key Features
+## 📌 Overview
 
-### 🧠 Real ML & Computer Vision Engine (`/backend`)
-- **Real Dataset Ingestion**: Streams real engagement data (Kaggle YouTube Trending / Hugging Face datasets) with fallback empirical sampling.
-- **Trained Machine Learning Model**: Uses `HistGradientBoostingRegressor` / `XGBoost` trained on 10,000+ real video rows (**$R^2 = 0.8714$**, **$RMSE = 7.7471$**).
-- **Vision & Audio Feature Extractor (`vision_audio_extractor.py`)**:
-  - **Hook Analysis (0–3s)**: Optical flow motion vectors, scene cut frequency per minute, visual brightness.
-  - **Video Quality & Aspect**: 9:16 vertical resolution, color vibrancy index.
-  - **Audio & Speech Analysis**: Librosa RMS audio energy (bass drops), EasyOCR text-on-screen detection, speech WPM pacing.
-- **In-Depth Video Content Diagnostics ("Video Ke Andar Ka Analysis")**:
-  - Subject & Face Count Detection (e.g. *1 Creator Solo Speaking Focus*).
-  - Scene Setting & Lighting Quality Index (e.g. *Indoor Studio with Accent Lighting*).
-  - Spoken Speech Transcript & Kinetic Text Overlay Detection.
-  - Scene-by-Scene Visual Timeline Breakdown (Hook, Main Point, Audio Peak, CTA).
+**AI Virality Predictor & Multi-Platform Optimizer** is an end-to-end, production-grade AI SaaS application that predicts the viral potential of short-form videos before publishing.
 
-### 🌸 Handcrafted Pinkish & Whitish UI System (`/frontend`)
-- **Modern Aesthetic**: Soft Rose-White background (`#FFF7F9`), pure white cards (`#FFFFFF`), vibrant Rose/Pink accents (`#F43F5E`), and smooth micro-animations.
-- **Dual-Input Hero Component**: Toggle tabs for Video File Upload (`.mp4`, `.mov`) and Video URL input (YouTube Shorts, TikTok, Reels, X, FB) with instant video poster preview.
-- **Universal Virality Score Gauge**: Semi-circle 0–100 dial with confidence rating.
-- **5 Prominent Platform Grid Cards**: Big grid cards for TikTok, YouTube Shorts, IG Reels, X, and Facebook with **touch-to-expand diagnostic modals**:
-  - 🔴 **Algorithm Gaps / Missing Items (Red Cards)**
-  - 🟢 **Step-by-Step Actionable Editing Plan (Green Cards)**
-  - 🔵 **Post-Upload Re-Editing Revival Strategy (Blue Cards)**
-- **Report Exporter**: 1-Click download for TXT/PDF Diagnostic Reports or CSV metrics spreadsheets.
-- **Persistent Analysis History**: Slide-over drawer storing past video diagnostic scans locally.
-- **Creator Authentication**: Integrated Login & Signup modal with user session management.
+It combines **Computer Vision (OpenCV)** for optical motion & scene cut pacing, **Audio Signal Processing (Librosa)** for acoustic energy peaks, and **Machine Learning (`HistGradientBoostingRegressor`)** trained on 10,000+ real engagement video rows ($R^2 = 0.8714$, $RMSE = 7.7471$) to generate actionable optimization plans for **YouTube Shorts**, **TikTok**, **Instagram Reels**, **X (Twitter)**, and **Facebook Reels**.
 
 ---
 
-## 📁 Project Structure
+## 🌐 Live Cloud Deployments
+
+| Component | URL | Status |
+| :--- | :--- | :--- |
+| **Frontend Application (Next.js)** | [https://ai-virality-predictor.vercel.app/](https://ai-virality-predictor.vercel.app/) | 🟢 Live on Vercel |
+| **Diagnostic Report Engine** | [https://ai-virality-predictor.vercel.app/analysis/1](https://ai-virality-predictor.vercel.app/analysis/1) | 🟢 Live on Vercel |
+| **Team Workspace** | [https://ai-virality-predictor.vercel.app/team](https://ai-virality-predictor.vercel.app/team) | 🟢 Live on Vercel |
+| **Platform Optimizer** | [https://ai-virality-predictor.vercel.app/optimizer](https://ai-virality-predictor.vercel.app/optimizer) | 🟢 Live on Vercel |
+| **Backend API Docs (Swagger)** | [https://ai-virality-predictor.onrender.com/docs](https://ai-virality-predictor.onrender.com/docs) | 🟢 Live on Render |
+
+---
+
+## ✨ Key Features & Capabilities
+
+### 🧠 1. Multimodal AI & Feature Extraction Engine (`/backend`)
+- **0–3s Hook Optical Flow**: Measures instantaneous motion flow to stop viewer scrolling.
+- **Scene Cut Frequency**: Calculates cuts-per-minute pacing via frame difference thresholds (`cv2.absdiff`).
+- **Audio RMS Energy & Bass Drops**: Analyzes acoustic energy transitions using Librosa.
+- **Speech Tempo & WPM**: Analyzes spoken speech pace (160–180 WPM target for optimal retention).
+- **Text Overlay Ratio**: Calculates on-screen caption density for sound-off mobile scrolling.
+- **Color Vibrancy & 9:16 Aspect**: Evaluates color grading warmth and vertical video resolution.
+
+### 📝 2. Full AI Video Summarization & Scene Detection
+- **Executive Video Narrative & Core Thesis**: Automatically detects video subject matter and core arguments.
+- **Key Takeaways & Hashtags**: Generates 3 actionable summary bullets and niche tags.
+- **Timestamped Scene Breakdown**: Frame-by-frame scene transitions with optical motion level badges (`High 82%`, `Medium 65%`).
+
+### 🎯 3. Multi-Platform Algorithm Fit Matrix
+- **TikTok**: Prioritizes opening hook velocity, rapid scene cuts (>20/min), and kinetic captions.
+- **YouTube Shorts**: Prioritizes speech tempo (>160 WPM), high color vibrancy, and seamless loop transitions.
+- **Instagram Reels**: Prioritizes studio lighting aesthetics and audio RMS peak synchronization.
+- **Twitter / X & Facebook Reels**: Prioritizes burnt-in subtitle coverage for muted feed autoplay.
+
+### 👥 4. Team Workspace & Collaboration (`/team`)
+- **Member Management**: Invite editors and growth managers with role-based access control (Admin, Analyst, Viewer).
+- **Shared Campaign Folders**: Multi-platform video projects with aggregate virality benchmarks.
+- **Live Audit Feed**: Real-time activity timeline tracking scans and report exports.
+
+### 🔒 5. Authentication, Per-User History & Privacy (`/auth` & `/settings`)
+- **Per-User Isolated History**: Each registered account only sees its own saved video diagnostics (`virality_history_{user_email}`).
+- **Password Strength Meter & Encryption**: Real client session tokens and credential management.
+- **Data Privacy Controls**: Data retention selector (30 days to indefinite) and benchmark opt-out.
+
+---
+
+## 📁 Repository Structure
 
 ```
 ai_virality_predictor/
 ├── backend/
-│   ├── dataset_loader.py          # Real Kaggle/HuggingFace Dataset Loader
-│   ├── train_model.py             # HistGradientBoosting / XGBoost Training Script
-│   ├── vision_audio_extractor.py  # OpenCV, Librosa, EasyOCR Feature Extractor
-│   ├── main.py                    # FastAPI Web Application Server
+│   ├── dataset_loader.py          # Kaggle & HuggingFace Real Dataset Ingestor
+│   ├── train_model.py             # HistGradientBoosting ML Training Pipeline
+│   ├── vision_audio_extractor.py  # OpenCV, Librosa & OCR Multimodal Extractor
+│   ├── main.py                    # FastAPI Web Application & Prediction Endpoints
 │   ├── virality_model.pkl         # Trained Model Binary (R² = 0.8714)
+│   ├── model_metadata.json        # Evaluation Metrics & Feature Metadata
 │   ├── requirements.txt           # Python Dependencies
-│   ├── Dockerfile                 # Backend Container Blueprint
-│   ├── docker-compose.yml         # Local Docker Orchestration
 │   └── render.yaml                # Render Cloud Deployment Blueprint
 ├── frontend/
 │   ├── src/
 │   │   ├── app/
-│   │   │   ├── layout.js          # Root Layout with Inter Font
-│   │   │   ├── page.js            # Main Dashboard Page
-│   │   │   └── globals.css        # Pinkish & Whitish Styling System
+│   │   │   ├── page.js            # Hero Studio & Quick Scan
+│   │   │   ├── dashboard/         # Main Creator Dashboard
+│   │   │   ├── analysis/[id]/     # Full Diagnostic Audit & Video Summary
+│   │   │   ├── team/              # Collaborative Team Workspace
+│   │   │   ├── optimizer/         # Multi-Platform Blueprint Studio
+│   │   │   ├── compare/           # Side-by-Side Video A/B Comparison
+│   │   │   ├── history/           # Per-User Isolated History
+│   │   │   ├── auth/              # Secured Login & Signup
+│   │   │   └── settings/          # Account & Privacy Controls
 │   │   ├── components/
-│   │   │   ├── Header.jsx         # Navigation Bar & User Auth Profile
-│   │   │   ├── HeroInput.jsx      # Video File & URL Dual Input Banner
-│   │   │   ├── ViralityGauge.jsx  # SVG Score Dial (0-100)
-│   │   │   ├── VideoPreview.jsx   # Interactive Video Player & Timeline Markers
-│   │   │   ├── MetricsGrid.jsx    # Feature Metric Cards
-│   │   │   ├── ContentAnalysisCard.jsx # In-Depth Scene & Subject Analysis
-│   │   │   ├── PlatformTabs.jsx   # 5 Platform Grid Cards & Expansion Modals
-│   │   │   ├── ComparisonMatrix.jsx # Multi-Platform Reach Bar Chart
-│   │   │   ├── ReportExporter.jsx # TXT/PDF & CSV Export Banner
-│   │   │   ├── AuthModal.jsx      # Login / Signup Modal
-│   │   │   └── HistoryDrawer.jsx  # Analysis History Storage Drawer
+│   │   │   ├── analysis/          # Diagnostic Cards, Hook Lab & Summary
+│   │   │   └── layout/            # Navigation & Sidebar Layouts
 │   │   └── lib/
-│   │       └── api.js             # Client API Service
-│   ├── package.json               # Next.js 14, TailwindCSS, Lucide Icons
-│   ├── Dockerfile                 # Frontend Container Blueprint
-│   ├── vercel.json                # Vercel Cloud Deployment Blueprint
-│   └── .env.example               # Environment Configuration
-├── deploy.sh                      # Automated Deployment Script
-└── docker-compose.yml             # Root Multi-Container Stack Blueprint
+│   │       ├── api.js             # Client API Service & Data Enrichment
+│   │       └── storage.js         # Isolated Per-User Local Persistence
+│   ├── package.json               # Next.js 14, Tailwind CSS, Lucide Icons
+│   └── vercel.json                # Vercel Deployment Configuration
+└── README.md                      # Comprehensive Documentation
 ```
 
 ---
 
-## ⚡ Quick Start & Running Locally
+## ⚡ Quick Start (Run Locally)
 
-### Option 1: Run with Docker (Recommended)
-Make sure Docker Desktop is running, then run:
-
-```bash
-docker-compose up -d --build
-```
-- **Frontend App**: [http://localhost:3001](http://localhost:3001)
-- **FastAPI Backend**: [http://localhost:8000](http://localhost:8000)
-
-### Option 2: Local Development (Without Docker)
-
-#### 1. Start Backend API
+### 1. Start Backend Server
 ```bash
 cd backend
 pip install -r requirements.txt
 python train_model.py
 python -m uvicorn main:app --reload --port 8000
 ```
+API runs at **`http://127.0.0.1:8000`** (Docs at `/docs`).
 
-#### 2. Start Frontend App
+### 2. Start Frontend App
 ```bash
 cd frontend
 npm install
@@ -118,18 +123,5 @@ Open your browser at **`http://localhost:3000`**.
 
 ---
 
-## 🌐 Public Cloud Deployment
-
-### Deploy Frontend to Vercel
-```bash
-cd frontend
-npx vercel --prod
-```
-
-### Deploy Backend to Render / Railway
-Connect your GitHub repository to [Render.com](https://render.com) or [Railway.app](https://railway.app). Render will automatically detect `backend/render.yaml` and deploy your Python server.
-
----
-
 ## 📄 License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
