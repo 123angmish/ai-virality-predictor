@@ -3,7 +3,7 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "backend")))
 from dataset_loader import DatasetLoader, FEATURE_COLUMNS
-from sklearn.ensemble import HistGradientBoostingRegressor
+from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score, mean_squared_error
 
@@ -15,9 +15,9 @@ def test_model_training_convergence():
     y = df["ViralityScore"]
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
     
-    model = HistGradientBoostingRegressor(max_iter=50, random_state=42)
+    model = LinearRegression()
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
     
     r2 = r2_score(y_test, y_pred)
-    assert r2 > 0.70  # Model learns expected non-linear interactions
+    assert r2 > 0.80  # Linear regression explains target variance cleanly

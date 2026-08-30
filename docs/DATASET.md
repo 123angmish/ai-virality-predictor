@@ -1,10 +1,10 @@
 # 📊 Dataset Documentation — Synthetic Audiovisual Virality Benchmark
 
 ## 1. Overview & Provenance Classification
-- **Classification**: **Synthetic Benchmark Dataset** parameterized by published social media engagement distributions.
-- **Purpose**: Designed to validate the end-to-end Machine Learning pipeline, evaluate non-linear feature combinations, and drive the multi-platform heuristic recommendation engine in a reproducible environment.
-- **Sample Count**: 10,000 synthetic short-form video records.
-- **Random Seed**: 42 (guarantees exact deterministic generation).
+- **Classification**: **Synthetic Benchmark Dataset** parameterized by controlled synthetic distributions.
+- **Purpose**: Designed to validate the end-to-end Machine Learning pipeline architecture, test multimodal feature extraction integrations, and evaluate platform blueprint heuristic logic in a reproducible testbed.
+- **Sample Count**: 10,000 synthetic video records.
+- **Random Seed**: 42 (guarantees exact deterministic reproduction).
 
 ---
 
@@ -25,7 +25,7 @@
 
 ## 3. Target Formulation (`ViralityScore`)
 
-The benchmark target represents a composite virality index ($0 - 100$) constructed using retention-weighted feature interactions with Gaussian noise:
+The benchmark target represents an engineered composite index ($0 - 100$) constructed using retention-weighted feature interactions with Gaussian noise:
 
 $$\text{RawScore} = 0.35 \cdot \text{hook} + 1.5 \cdot \text{cuts} + 25.0 \cdot \text{rms} + 0.15 \cdot \text{wpm} + 20.0 \cdot \text{text} + 0.25 \cdot \text{vibrancy} + 15.0 \cdot \text{aspect} + 0.3 \cdot \text{retention} + \epsilon$$
 $$\text{ViralityScore} = 10.0 + \left( \frac{\text{RawScore} - \min}{\max - \min} \right) \times 88.0$$
@@ -34,11 +34,12 @@ $$\text{ViralityScore} = 10.0 + \left( \frac{\text{RawScore} - \min}{\max - \min
 
 ---
 
-## 4. Methodological Limitations
+## 4. Methodological Scope & External Validity
 
-1. **Non-Real-World Ground Truth**: While the parameter ranges model observed short-form social video trends, the records are synthetically synthesized and do not reflect specific live social media accounts or actual platform algorithmic shifts.
-2. **Omitted External Covariates**: Real social media virality is heavily influenced by external variables not captured in raw video files alone:
-   - Creator follower base and historical authority.
-   - Distribution timing and regional trend momentum.
-   - Platform recommendation algorithm AB testing.
-   - Community comment engagement and controversial discussion.
+1. **Synthetic Validation Scope**: Controlled synthetic distributions were chosen to simulate plausible audiovisual feature ranges and verify ML pipeline mechanics.
+2. **External Validity**: Benchmark metrics ($R^2$, RMSE) evaluate algorithm fit against the synthetic target formulation; they do **not** represent forecasting accuracy on live social media platforms.
+3. **Uncaptured Real-World Dynamics**: Live social media engagement depends heavily on external factors not present in raw video pixel/audio data:
+   - Creator follower base and account authority.
+   - Algorithmic recommendation cohort testing.
+   - Cultural timing, trending sounds, and topical momentum.
+   - User comment threads and sharing dynamics.

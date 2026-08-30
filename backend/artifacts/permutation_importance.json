@@ -1,37 +1,37 @@
 [
   {
     "feature": "scene_cut_rate",
-    "importance_mean": 0.6832,
-    "importance_std": 0.0208
+    "importance_mean": 0.6961,
+    "importance_std": 0.0186
   },
   {
     "feature": "hook_motion_intensity",
-    "importance_mean": 0.3311,
-    "importance_std": 0.0062
+    "importance_mean": 0.3378,
+    "importance_std": 0.0059
   },
   {
     "feature": "resolution_aspect",
-    "importance_mean": 0.181,
-    "importance_std": 0.0062
+    "importance_mean": 0.1918,
+    "importance_std": 0.006
   },
   {
     "feature": "audio_rms_energy",
-    "importance_mean": 0.1632,
-    "importance_std": 0.0063
+    "importance_mean": 0.1702,
+    "importance_std": 0.0066
   },
   {
     "feature": "transcript_wpm",
-    "importance_mean": 0.1432,
-    "importance_std": 0.0048
+    "importance_mean": 0.1491,
+    "importance_std": 0.0047
   },
   {
     "feature": "color_vibrancy",
-    "importance_mean": 0.126,
-    "importance_std": 0.0052
+    "importance_mean": 0.1306,
+    "importance_std": 0.0054
   },
   {
     "feature": "text_overlay_ratio",
-    "importance_mean": 0.0942,
-    "importance_std": 0.0045
+    "importance_mean": 0.0997,
+    "importance_std": 0.0043
   }
 ]

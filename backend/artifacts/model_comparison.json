@@ -2,6 +2,8 @@
   "dataset_source": "Synthetic Audiovisual Virality Benchmark (10,000 records, Seed 42)",
   "sample_size": 10000,
   "test_size": 2000,
+  "selected_model": "Linear Regression",
+  "selection_reasoning": "Linear Regression achieves the highest R\u00b2 (0.8824) and lowest RMSE (4.5194) because the engineered synthetic benchmark target is largely a linear combination of feature inputs. Complex tree models do not improve test performance on this benchmark.",
   "features": [
     "hook_motion_intensity",
     "scene_cut_rate",
@@ -14,22 +16,22 @@
   "target": "ViralityScore",
   "results": [
     {
-      "model": "Linear Regression",
+      "model": "Linear Regression (Selected)",
       "r2_score": 0.8824,
       "rmse": 4.5194,
       "mae": 3.7105
     },
     {
-      "model": "Ridge Regression",
+      "model": "Ridge Regression (alpha=1.0)",
       "r2_score": 0.8824,
       "rmse": 4.5195,
       "mae": 3.7105
     },
     {
-      "model": "Random Forest Regressor",
-      "r2_score": 0.8007,
-      "rmse": 5.8836,
-      "mae": 4.6765
+      "model": "HistGradientBoosting Regressor",
+      "r2_score": 0.8669,
+      "rmse": 4.8081,
+      "mae": 3.9141
     },
     {
       "model": "Gradient Boosting Regressor",
@@ -38,10 +40,10 @@
       "mae": 3.9203
     },
     {
-      "model": "HistGradientBoosting Regressor",
-      "r2_score": 0.8669,
-      "rmse": 4.8081,
-      "mae": 3.9141
+      "model": "Random Forest Regressor",
+      "r2_score": 0.8007,
+      "rmse": 5.8836,
+      "mae": 4.6765
     }
   ]
 }

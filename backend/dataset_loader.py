@@ -1,7 +1,8 @@
 """
-Dataset Ingestion & Synthetic Benchmark Generator for AI Virality Predictor
-Provides a standardized benchmark dataset parameterized by empirical social video distributions
-(log-normal views/likes, Rayleigh hook speeds, Beta retention, and multimodal audio/visual features).
+Dataset Generator for AI Virality Predictor
+Generates a standardized Synthetic Audiovisual Virality Benchmark parameterized by
+controlled synthetic distributions chosen to simulate plausible audiovisual feature ranges
+(log-normal view/like ratios, Rayleigh hook velocities, Beta retention, and multimodal features).
 """
 
 import os
@@ -26,67 +27,42 @@ FEATURE_COLUMNS = [
 
 class DatasetLoader:
     """
-    Dataset Ingestor and Benchmark Generator.
+    Synthetic Benchmark Generator for pipeline validation.
     
-    Used to supply consistent training and evaluation matrices for the ML regression pipeline.
-    Explicitly distinguishes between empirical social video parameters and real platform analytics.
+    Explicitly operates on controlled synthetic distributions to evaluate ML algorithms
+    and platform blueprint heuristic logic in a reproducible testbed.
     """
     def __init__(self, target_sample_size: int = 10000, random_seed: int = 42):
         self.target_sample_size = target_sample_size
         self.random_seed = random_seed
-        self.dataset_source = "Uninitialized"
-
-    def fetch_kaggle_metadata(self) -> pd.DataFrame:
-        """
-        Attempts to fetch public YouTube Trending metadata via Kaggle API.
-        Note: Contains metadata (views, likes, tags), but not raw video pixel/audio features.
-        """
-        try:
-            import kaggle
-            logger.info("Attempting Kaggle API metadata download...")
-            dataset_name = "datasnaek/youtube-new"
-            download_dir = os.path.join(os.path.dirname(__file__), "data_cache")
-            os.makedirs(download_dir, exist_ok=True)
-            
-            kaggle.api.dataset_download_files(dataset_name, path=download_dir, unzip=True)
-            us_csv = os.path.join(download_dir, "USvideos.csv")
-            if os.path.exists(us_csv):
-                df = pd.read_csv(us_csv)
-                self.dataset_source = f"Kaggle YouTube Metadata ({dataset_name})"
-                logger.info(f"Loaded Kaggle metadata: {len(df)} rows.")
-                return df
-        except Exception as e:
-            logger.info(f"Kaggle API metadata fetch skipped or credentials unavailable: {e}")
-        return pd.DataFrame()
+        self.dataset_source = "Synthetic Audiovisual Virality Benchmark (10,000 records, Seed 42)"
 
     def generate_synthetic_benchmark_dataset(self) -> pd.DataFrame:
         """
-        Synthesizes a standardized multimodal benchmark dataset parameterized by empirical social video distributions
-        (Log-normal distributions for view/like ratios, Rayleigh distribution for hook motion speeds, Beta distribution for retention).
-        
-        Generates 10,000 benchmark records with documented feature correlations for reproducible model training.
+        Synthesizes a standardized multimodal benchmark dataset using controlled synthetic distributions
+        chosen to simulate plausible audiovisual feature ranges for model validation.
         """
         logger.info(f"Generating synthetic benchmark dataset with {self.target_sample_size} records (seed={self.random_seed})...")
         np.random.seed(self.random_seed)
         n = self.target_sample_size
 
-        # Empirical distribution parameters from short-form video dynamics
+        # Controlled synthetic distributions modeling plausible short-form video engagement bounds
         views = np.random.lognormal(mean=10.5, sigma=1.8, size=n).astype(int) + 100
         likes = (views * np.random.uniform(0.04, 0.14, size=n)).astype(int)
         shares = (views * np.random.uniform(0.01, 0.06, size=n)).astype(int)
         comments = (views * np.random.uniform(0.005, 0.03, size=n)).astype(int)
-        watch_time_retention = np.random.beta(a=2.5, b=2.0, size=n) * 100.0  # 0-100% retention
+        watch_time_retention = np.random.beta(a=2.5, b=2.0, size=n) * 100.0
 
-        # Extracted Computer Vision & Audio signal features
+        # Simulated Computer Vision & Audio signal feature ranges
         hook_motion_intensity = np.random.uniform(10.0, 95.0, size=n)
-        scene_cut_rate = np.random.uniform(2.0, 30.0, size=n)  # cuts per minute
+        scene_cut_rate = np.random.uniform(2.0, 30.0, size=n)
         audio_rms_energy = np.random.uniform(0.1, 0.95, size=n)
-        transcript_wpm = np.random.uniform(110, 240, size=n)  # spoken words per minute
+        transcript_wpm = np.random.uniform(110, 240, size=n)
         text_overlay_ratio = np.random.uniform(0.0, 0.8, size=n)
         color_vibrancy = np.random.uniform(20.0, 98.0, size=n)
-        resolution_aspect = np.random.choice([0.5625, 1.0, 1.777], size=n, p=[0.7, 0.15, 0.15])  # 9:16 vertical priority
+        resolution_aspect = np.random.choice([0.5625, 1.0, 1.777], size=n, p=[0.7, 0.15, 0.15])
 
-        # Synthetic benchmark target: composite retention-weighted virality index
+        # Engineered synthetic target: weighted linear combination with Gaussian noise
         raw_score = (
             (hook_motion_intensity * 0.35) +
             (scene_cut_rate * 1.5) +
@@ -119,12 +95,8 @@ class DatasetLoader:
             "ViralityScore": np.round(virality_score, 2)
         })
 
-        self.dataset_source = "Synthetic Audiovisual Virality Benchmark (10,000 records, Seed 42)"
         return df
 
     def load_dataset(self) -> Tuple[pd.DataFrame, str]:
-        """
-        Loads the benchmark dataset for training and model validation.
-        """
         df = self.generate_synthetic_benchmark_dataset()
         return df, self.dataset_source
