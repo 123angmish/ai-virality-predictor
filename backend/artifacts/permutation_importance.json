@@ -1,0 +1,37 @@
+[
+  {
+    "feature": "scene_cut_rate",
+    "importance_mean": 0.6832,
+    "importance_std": 0.0208
+  },
+  {
+    "feature": "hook_motion_intensity",
+    "importance_mean": 0.3311,
+    "importance_std": 0.0062
+  },
+  {
+    "feature": "resolution_aspect",
+    "importance_mean": 0.181,
+    "importance_std": 0.0062
+  },
+  {
+    "feature": "audio_rms_energy",
+    "importance_mean": 0.1632,
+    "importance_std": 0.0063
+  },
+  {
+    "feature": "transcript_wpm",
+    "importance_mean": 0.1432,
+    "importance_std": 0.0048
+  },
+  {
+    "feature": "color_vibrancy",
+    "importance_mean": 0.126,
+    "importance_std": 0.0052
+  },
+  {
+    "feature": "text_overlay_ratio",
+    "importance_mean": 0.0942,
+    "importance_std": 0.0045
+  }
+]

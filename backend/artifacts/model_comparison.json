@@ -1,0 +1,47 @@
+{
+  "dataset_source": "Synthetic Audiovisual Virality Benchmark (10,000 records, Seed 42)",
+  "sample_size": 10000,
+  "test_size": 2000,
+  "features": [
+    "hook_motion_intensity",
+    "scene_cut_rate",
+    "audio_rms_energy",
+    "transcript_wpm",
+    "text_overlay_ratio",
+    "color_vibrancy",
+    "resolution_aspect"
+  ],
+  "target": "ViralityScore",
+  "results": [
+    {
+      "model": "Linear Regression",
+      "r2_score": 0.8824,
+      "rmse": 4.5194,
+      "mae": 3.7105
+    },
+    {
+      "model": "Ridge Regression",
+      "r2_score": 0.8824,
+      "rmse": 4.5195,
+      "mae": 3.7105
+    },
+    {
+      "model": "Random Forest Regressor",
+      "r2_score": 0.8007,
+      "rmse": 5.8836,
+      "mae": 4.6765
+    },
+    {
+      "model": "Gradient Boosting Regressor",
+      "r2_score": 0.8651,
+      "rmse": 4.8396,
+      "mae": 3.9203
+    },
+    {
+      "model": "HistGradientBoosting Regressor",
+      "r2_score": 0.8669,
+      "rmse": 4.8081,
+      "mae": 3.9141
+    }
+  ]
+}

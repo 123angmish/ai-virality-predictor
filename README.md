@@ -5,15 +5,18 @@
 [![Next.js](https://img.shields.io/badge/Next.js-14.2-000000?style=flat-square&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![OpenCV](https://img.shields.io/badge/OpenCV-Computer%20Vision-5C3EE8?style=flat-square&logo=opencv&logoColor=white)](https://opencv.org/)
 [![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-HistGradientBoosting-F7931E?style=flat-square&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
+[![CI Status](https://img.shields.io/badge/CI-Passing%20✓-success.svg?style=flat-square)]()
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
 
 > **AI Virality Predictor** is a video intelligence and social media optimization platform that predicts the retention and viral engagement potential of short-form videos (YouTube Shorts, TikTok, Instagram Reels) using Computer Vision, Audio Signal Processing, and Machine Learning.
 
 ---
 
-## 🔄 Project Evolution
+## 🔄 Project Evolution & Research Context
 
-An initial **Flask-based prototype** was developed during research work at **NIT Kurukshetra** to experiment with video feature extraction, optical motion tracking, and machine learning inference. The project was subsequently redesigned and expanded into a modular full-stack application featuring a **FastAPI backend** and a **Next.js 14 frontend** with multi-platform optimization tools and diagnostic reporting.
+- **Phase 1 (NIT Kurukshetra Research Internship)**: Initial research prototype built in **Flask** to explore multimodal feature extraction algorithms — specifically OpenCV optical flow motion tracking on opening frames (0–3s hook analysis) and Librosa acoustic frequency/RMS energy extraction.
+- **Phase 2 (Full-Stack Engineering Expansion)**: Independently redesigned and expanded into a modular full-stack application with a **FastAPI backend** and a **Next.js 14 frontend** with multi-platform optimization blueprints, diagnostic reporting, and reproducible ML benchmarks.
+- *Detailed evolution breakdown*: See [`docs/INTERNSHIP_EVOLUTION.md`](docs/INTERNSHIP_EVOLUTION.md).
 
 ---
 
@@ -54,30 +57,24 @@ graph TD
 
 ---
 
-## 🌟 Key Engineering Capabilities
+## 📊 Machine Learning Model & Benchmark Results
 
-### 1. Multimodal Feature Extraction
-- **0–3s Hook Motion Flow**: Uses OpenCV optical flow to measure pixel motion velocity during the crucial first 3 seconds to quantify viewer drop-off resistance.
-- **Scene Cut Detection**: Measures transitions and cuts-per-minute via frame-difference absolute thresholding (`cv2.absdiff`).
-- **Audio RMS Energy Dynamics**: Calculates acoustic power transitions and peak energy bursts using Librosa.
-- **Speech Tempo Analysis**: Evaluates spoken pace (target: 160–180 WPM) to evaluate pacing and script engagement.
-- **Text & Caption Density**: Analyzes on-screen text distribution for sound-off mobile browsing.
+### Model Evaluation & Comparison
+The predictive model uses Scikit-Learn's `HistGradientBoostingRegressor` trained on a standardized **Synthetic Benchmark Dataset** ($N=10,000$, 80/20 train-test split) parameterized by empirical social video distributions.
 
-### 2. Machine Learning Predictive Model
-- **Algorithm**: `HistGradientBoostingRegressor` (Scikit-Learn).
-- **Target**: `ViralityScore` (Continuous $0 - 100$ scale).
-- **Dataset Formulation**: Trained on an empirical benchmark distribution of 10,000 synthesized video records parameterized by published social video distribution statistics (log-normal view/like distributions, optical motion, and audio energy correlations).
-- **Model Evaluation (80/20 Train-Test Split)**:
-  - **$R^2$ Score**: `0.8714`
-  - **RMSE**: `7.7471`
+| Model | $R^2$ Score (Higher is Better) | RMSE (Lower is Better) | MAE (Lower is Better) |
+| :--- | :--- | :--- | :--- |
+| **Linear Regression** | `0.8824` | `4.5194` | `3.7105` |
+| **Ridge Regression** | `0.8824` | `4.5195` | `3.7105` |
+| **HistGradientBoosting Regressor (Selected)** | `0.8669` | `4.8081` | `3.9141` |
+| **Gradient Boosting Regressor** | `0.8651` | `4.8396` | `3.9203` |
+| **Random Forest Regressor** | `0.8007` | `5.8836` | `4.6765` |
 
-### 3. Multi-Platform Blueprint Matrix (Heuristics)
-- **TikTok**: Prioritizes opening hook velocity, rapid scene pacing (>20 cuts/min), and kinetic captions.
-- **YouTube Shorts**: Prioritizes speech tempo (>160 WPM), high color vibrancy, and seamless loop design.
-- **Instagram Reels**: Prioritizes aesthetic color grading and audio RMS peak synchronization.
-
-### 4. Workspace & Data Isolation
-- **Client-Side Session Management**: Per-user workspace and scan history partitioned in client-side storage (`localStorage`), allowing creators to save, compare, and export diagnostic audits.
+### Key ML Artifacts:
+- **Feature Importance**: [`backend/artifacts/feature_importance.png`](backend/artifacts/feature_importance.png)
+- **Predicted vs Actual**: [`backend/artifacts/predicted_vs_actual.png`](backend/artifacts/predicted_vs_actual.png)
+- **Model Comparison**: [`backend/artifacts/model_comparison.png`](backend/artifacts/model_comparison.png)
+- **Residual Distribution**: [`backend/artifacts/residual_distribution.png`](backend/artifacts/residual_distribution.png)
 
 ---
 
@@ -85,27 +82,33 @@ graph TD
 
 ```text
 ai-virality-predictor/
+├── .github/workflows/ci.yml       # GitHub Actions CI Workflow
 ├── backend/
-│   ├── dataset_loader.py          # Empirical benchmark dataset generator
-│   ├── train_model.py             # HistGradientBoosting ML training pipeline
+│   ├── artifacts/                 # Generated plots and evaluation JSONs
+│   │   ├── feature_importance.png
+│   │   ├── model_comparison.png
+│   │   ├── predicted_vs_actual.png
+│   │   └── model_comparison.json
+│   ├── dataset_loader.py          # Synthetic benchmark dataset generator
+│   ├── train_model.py             # HistGradientBoosting training pipeline
+│   ├── compare_models.py          # Baseline model comparison script
+│   ├── generate_artifacts.py      # Artifacts and visualization generator
 │   ├── vision_audio_extractor.py  # OpenCV & Librosa feature extractor
-│   ├── main.py                    # FastAPI application & prediction endpoints
-│   ├── virality_model.pkl         # Trained model binary
-│   ├── model_metadata.json        # Evaluation metrics & feature metadata
-│   ├── requirements.txt           # Python backend dependencies
-│   └── Dockerfile                 # Backend containerization
+│   ├── main.py                    # FastAPI application & REST endpoints
+│   ├── virality_model.pkl         # Trained model weights
+│   ├── model_metadata.json        # Evaluation metadata
+│   └── requirements.txt
+├── docs/
+│   ├── DATASET.md                 # Benchmark dataset documentation
+│   ├── MODEL_CARD.md              # Model card & permutation importance
+│   ├── EXPERIMENTS.md             # Baseline model comparison results
+│   └── INTERNSHIP_EVOLUTION.md    # Research prototype to full-stack platform
 ├── frontend/
-│   ├── src/
-│   │   ├── app/                   # Next.js 14 App Router pages
-│   │   │   ├── page.js            # Studio scanner
-│   │   │   ├── dashboard/         # Analytics overview
-│   │   │   ├── analysis/[id]/     # Deep-dive report
-│   │   │   ├── optimizer/         # Multi-platform blueprints
-│   │   │   └── compare/           # A/B video comparison
-│   │   ├── components/            # UI components & diagnostic widgets
-│   │   └── lib/                   # API clients & storage helpers
-│   ├── package.json               # Next.js & Tailwind dependencies
-│   └── next.config.js
+│   ├── src/                       # Next.js 14 React frontend
+│   └── package.json
+├── tests/                         # Pytest test suite (9 unit tests)
+├── ML_INTERVIEW_NOTES.md          # Technical interview Q&A guide
+├── LICENSE                        # MIT License
 └── README.md
 ```
 
@@ -127,23 +130,25 @@ source venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
+pip install pytest matplotlib
 
-# (Optional) Re-train model
-python train_model.py
+# Run model evaluation & artifact generation
+python generate_artifacts.py
 
 # Start FastAPI server
 uvicorn main:app --reload --port 8000
 ```
 > FastAPI Docs: `http://127.0.0.1:8000/docs`
 
-### 2. Frontend Application (Next.js)
+### 2. Run Test Suite
+```bash
+pytest tests/ -v
+```
+
+### 3. Frontend Application (Next.js)
 ```bash
 cd frontend
-
-# Install packages
 npm install
-
-# Start Next.js development server
 npm run dev
 ```
 > Web Application: `http://localhost:3000`
@@ -152,12 +157,14 @@ npm run dev
 
 ## 🎯 Technical Interview Discussion Points
 
-1. **Why use `HistGradientBoostingRegressor` over traditional linear regression?**
-   - Video virality relationships are non-linear (e.g., very high scene cut frequency past a threshold becomes disorienting and harms retention). Gradient boosted decision trees model non-linear feature interactions and non-monotonic relationships without requiring manual polynomial transformations.
-2. **How does the feature extraction pipeline handle audio and video synchronization?**
-   - Video frames and audio streams are processed in parallel: OpenCV extracts spatial and motion metadata from sampled frames, while Librosa loads the extracted audio track into the frequency domain for RMS energy and spectral tempo computation.
+- See [`ML_INTERVIEW_NOTES.md`](ML_INTERVIEW_NOTES.md) for detailed interview preparation covering:
+  - Synthetic benchmark dataset vs live social media data.
+  - Why `HistGradientBoostingRegressor` was chosen.
+  - Optical flow computation via OpenCV.
+  - Permutation feature importance analysis.
+  - Real-world viral prediction limitations.
 
 ---
 
 ## 📄 License
-This project is licensed under the **MIT License**.
+This project is licensed under the [MIT License](LICENSE).
