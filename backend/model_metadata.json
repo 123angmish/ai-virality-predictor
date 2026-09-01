@@ -1,8 +1,16 @@
 {
-  "dataset_source": "Real Engagement Empirical Dataset (10,000+ Video Rows)",
+  "dataset_source": "Synthetic Audiovisual Virality Benchmark (10,000 records, Seed 42)",
   "sample_size": 10000,
-  "r2_score": 0.8714,
-  "rmse": 7.7471,
+  "train_samples": 8000,
+  "test_samples": 2000,
+  "algorithm": "LinearRegression",
+  "rationale": "Selected as the best-performing model on the synthetic benchmark because the engineered target is largely a weighted combination of input features.",
+  "python_version": "3.10.0",
+  "scikit_learn_version": "1.4.2",
+  "serialization_method": "pickle (protocol 4)",
+  "r2_score": 0.8824,
+  "rmse": 4.5194,
+  "mae": 3.7105,
   "feature_columns": [
     "hook_motion_intensity",
     "scene_cut_rate",
@@ -12,5 +20,15 @@
     "color_vibrancy",
     "resolution_aspect"
   ],
-  "target": "ViralityScore"
+  "target": "ViralityScore",
+  "coefficients": {
+    "hook_motion_intensity": 0.2198,
+    "scene_cut_rate": 0.9494,
+    "audio_rms_energy": 15.658,
+    "transcript_wpm": 0.0956,
+    "text_overlay_ratio": 12.5665,
+    "color_vibrancy": 0.1569,
+    "resolution_aspect": 9.597
+  },
+  "intercept": -19.2225
 }

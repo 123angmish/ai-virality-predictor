@@ -1,0 +1,47 @@
+{
+  "intercept": -19.2225,
+  "coefficients": [
+    {
+      "feature": "scene_cut_rate",
+      "raw_coefficient": 0.9494,
+      "feature_scale_std": 8.0575,
+      "standardized_effect": 7.6496
+    },
+    {
+      "feature": "hook_motion_intensity",
+      "raw_coefficient": 0.2198,
+      "feature_scale_std": 24.536,
+      "standardized_effect": 5.3941
+    },
+    {
+      "feature": "resolution_aspect",
+      "raw_coefficient": 9.597,
+      "feature_scale_std": 0.4315,
+      "standardized_effect": 4.1416
+    },
+    {
+      "feature": "audio_rms_energy",
+      "raw_coefficient": 15.658,
+      "feature_scale_std": 0.2471,
+      "standardized_effect": 3.8683
+    },
+    {
+      "feature": "transcript_wpm",
+      "raw_coefficient": 0.0956,
+      "feature_scale_std": 37.3773,
+      "standardized_effect": 3.5715
+    },
+    {
+      "feature": "color_vibrancy",
+      "raw_coefficient": 0.1569,
+      "feature_scale_std": 22.5578,
+      "standardized_effect": 3.5403
+    },
+    {
+      "feature": "text_overlay_ratio",
+      "raw_coefficient": 12.5665,
+      "feature_scale_std": 0.2317,
+      "standardized_effect": 2.9122
+    }
+  ]
+}
