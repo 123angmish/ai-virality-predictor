@@ -1,127 +1,181 @@
 # 🚀 AI Virality Predictor & Multi-Platform Optimizer
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel%20Production-10B981?style=for-the-badge&logo=vercel)](https://ai-virality-predictor.vercel.app/)
-[![API Docs](https://img.shields.io/badge/FastAPI%20Docs-Render%20Cloud-0284C7?style=for-the-badge&logo=fastapi)](https://ai-virality-predictor.onrender.com/docs)
+> **An AI-powered "Doctor for Short-Form Videos"** that predicts virality scores, identifies retention flaws, and generates platform-specific editing blueprints before you post on **YouTube Shorts, TikTok, and Instagram Reels**.
+
+[![Live App](https://img.shields.io/badge/Live%20Demo-Vercel-10B981?style=for-the-badge&logo=vercel&logoColor=white)](https://ai-virality-predictor.vercel.app/)
+[![API Docs](https://img.shields.io/badge/API%20Docs-Swagger-0284C7?style=for-the-badge&logo=fastapi&logoColor=white)](https://ai-virality-predictor.onrender.com/docs)
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Next.js](https://img.shields.io/badge/Next.js-14.2-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-ML%20Model-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
 [![OpenCV](https://img.shields.io/badge/OpenCV-Computer%20Vision-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)](https://opencv.org/)
-[![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-HistGradientBoosting-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
-
-> **Topics & Tags**: `machine-learning` • `computer-vision` • `fastapi` • `nextjs` • `python` • `opencv` • `librosa` • `virality-predictor` • `video-intelligence` • `social-media-ai` • `youtube-shorts` • `tiktok-algorithm` • `instagram-reels` • `scikit-learn` • `tailwind-css`
 
 ---
 
-## 📌 Overview
+## 📌 What is this project? (In Simple Words)
 
-**AI Virality Predictor & Multi-Platform Optimizer** is an end-to-end, production-grade AI SaaS application that predicts the viral potential of short-form videos before publishing.
+When content creators upload a video to YouTube Shorts, TikTok, or Instagram Reels, **over 70% of viewers drop off in the first 3 seconds**. 
 
-It combines **Computer Vision (OpenCV)** for optical motion & scene cut pacing, **Audio Signal Processing (Librosa)** for acoustic energy peaks, and **Machine Learning (`HistGradientBoostingRegressor`)** trained on 10,000+ real engagement video rows ($R^2 = 0.8714$, $RMSE = 7.7471$) to generate actionable optimization plans for **YouTube Shorts**, **TikTok**, **Instagram Reels**, **X (Twitter)**, and **Facebook Reels**.
+Existing analytics tools (like YouTube Studio) only tell creators what went wrong **AFTER** the video has already failed.
 
----
-
-## 🌐 Live Cloud Deployments
-
-| Component | URL | Status |
-| :--- | :--- | :--- |
-| **Frontend Application (Next.js)** | [https://ai-virality-predictor.vercel.app/](https://ai-virality-predictor.vercel.app/) | 🟢 Live on Vercel |
-| **Diagnostic Report Engine** | [https://ai-virality-predictor.vercel.app/analysis/1](https://ai-virality-predictor.vercel.app/analysis/1) | 🟢 Live on Vercel |
-| **Team Workspace** | [https://ai-virality-predictor.vercel.app/team](https://ai-virality-predictor.vercel.app/team) | 🟢 Live on Vercel |
-| **Platform Optimizer** | [https://ai-virality-predictor.vercel.app/optimizer](https://ai-virality-predictor.vercel.app/optimizer) | 🟢 Live on Vercel |
-| **Backend API Docs (Swagger)** | [https://ai-virality-predictor.onrender.com/docs](https://ai-virality-predictor.onrender.com/docs) | 🟢 Live on Render |
+**AI Virality Predictor** solves this by acting as a **pre-publish diagnostic tool**:
+1. You upload your video file (`.mp4`, `.mov`) or paste a video link.
+2. The AI scans the video's **visual motion, scene cut pacing, and audio energy**.
+3. It gives you a **0–100 Virality Score**, a **full AI video summary**, and a **step-by-step editing checklist** to fix drop-offs before you publish.
 
 ---
 
-## ✨ Key Features & Capabilities
+## 🌐 Live Links
 
-### 🧠 1. Multimodal AI & Feature Extraction Engine (`/backend`)
-- **0–3s Hook Optical Flow**: Measures instantaneous motion flow to stop viewer scrolling.
-- **Scene Cut Frequency**: Calculates cuts-per-minute pacing via frame difference thresholds (`cv2.absdiff`).
-- **Audio RMS Energy & Bass Drops**: Analyzes acoustic energy transitions using Librosa.
-- **Speech Tempo & WPM**: Analyzes spoken speech pace (160–180 WPM target for optimal retention).
-- **Text Overlay Ratio**: Calculates on-screen caption density for sound-off mobile scrolling.
-- **Color Vibrancy & 9:16 Aspect**: Evaluates color grading warmth and vertical video resolution.
-
-### 📝 2. Full AI Video Summarization & Scene Detection
-- **Executive Video Narrative & Core Thesis**: Automatically detects video subject matter and core arguments.
-- **Key Takeaways & Hashtags**: Generates 3 actionable summary bullets and niche tags.
-- **Timestamped Scene Breakdown**: Frame-by-frame scene transitions with optical motion level badges (`High 82%`, `Medium 65%`).
-
-### 🎯 3. Multi-Platform Algorithm Fit Matrix
-- **TikTok**: Prioritizes opening hook velocity, rapid scene cuts (>20/min), and kinetic captions.
-- **YouTube Shorts**: Prioritizes speech tempo (>160 WPM), high color vibrancy, and seamless loop transitions.
-- **Instagram Reels**: Prioritizes studio lighting aesthetics and audio RMS peak synchronization.
-- **Twitter / X & Facebook Reels**: Prioritizes burnt-in subtitle coverage for muted feed autoplay.
-
-### 👥 4. Team Workspace & Collaboration (`/team`)
-- **Member Management**: Invite editors and growth managers with role-based access control (Admin, Analyst, Viewer).
-- **Shared Campaign Folders**: Multi-platform video projects with aggregate virality benchmarks.
-- **Live Audit Feed**: Real-time activity timeline tracking scans and report exports.
-
-### 🔒 5. Authentication, Per-User History & Privacy (`/auth` & `/settings`)
-- **Per-User Isolated History**: Each registered account only sees its own saved video diagnostics (`virality_history_{user_email}`).
-- **Password Strength Meter & Encryption**: Real client session tokens and credential management.
-- **Data Privacy Controls**: Data retention selector (30 days to indefinite) and benchmark opt-out.
+- 🖥️ **Live Web Application**: [https://ai-virality-predictor.vercel.app/](https://ai-virality-predictor.vercel.app/)
+- 🔬 **Diagnostic Report Engine**: [https://ai-virality-predictor.vercel.app/analysis/1](https://ai-virality-predictor.vercel.app/analysis/1)
+- 👥 **Team Workspace**: [https://ai-virality-predictor.vercel.app/team](https://ai-virality-predictor.vercel.app/team)
+- ⚡ **Platform Optimizer**: [https://ai-virality-predictor.vercel.app/optimizer](https://ai-virality-predictor.vercel.app/optimizer)
+- 📖 **Backend API Documentation (Swagger)**: [https://ai-virality-predictor.onrender.com/docs](https://ai-virality-predictor.onrender.com/docs)
 
 ---
 
-## 📁 Repository Structure
+## 🏗️ How It Works (Architecture Flow)
 
+```text
+  [ User Uploads Video / Link ]
+               │
+               ▼
+  ┌─────────────────────────────────────────────────────────┐
+  │         Feature Extraction Engine (FastAPI Backend)     │
+  │  • OpenCV  ──► 0-3s Hook Motion & Scene Cut Frequency   │
+  │  • Librosa ──► Audio RMS Energy, Volume & Bass Drops    │
+  │  • OCR/WPM ──► Speech Tempo (Words/Min) & Text Captions │
+  └────────────────────────────┬────────────────────────────┘
+                               │ (7 Multimodal Signals)
+                               ▼
+  ┌─────────────────────────────────────────────────────────┐
+  │        Machine Learning Model (HistGradientBoosting)    │
+  │  • Trained on 10,000+ empirical social video records    │
+  │  • Accuracy: R² = 0.8714  |  RMSE = 7.74                │
+  └────────────────────────────┬────────────────────────────┘
+                               │
+                               ▼
+  ┌─────────────────────────────────────────────────────────┐
+  │                 Next.js 14 Frontend UI                  │
+  │  • 0-100 Virality Score & Confidence Index              │
+  │  • AI Video Summary & Frame-by-Frame Scene Detection    │
+  │  • Hook Lab (3 AI Script Rewrites)                      │
+  │  • 5-Platform Editing Blueprints (Shorts, TikTok, Reels)│
+  │  • Collaborative Team Workspace & Private History       │
+  └─────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## ✨ Key Features
+
+- 🎯 **Virality Score Dial (0–100)**: Instant prediction of video potential with estimated view reach.
+- 🎬 **AI Video Summary & Scene Detection**: Extracts the core thesis, 3 bullet takeaways, and timestamped scene transitions.
+- 🪝 **Hook Lab (First 3 Seconds)**: Analyzes opening curiosity and provides 3 alternative viral hook scripts.
+- 📊 **Interactive Signal Timeline**: Visual graph mapping visual motion, audio peaks, and retention risks second-by-second.
+- 📱 **Multi-Platform Blueprint Matrix**: Specific editing plans and peak posting schedules for **TikTok**, **YouTube Shorts**, **Instagram Reels**, **Facebook Reels**, and **X (Twitter)**.
+- 👥 **Team Workspace (`/team`)**: Invite editors, create shared campaign folders, and monitor real-time audit feeds.
+- 🔒 **Per-User Isolated History & Privacy (`/history` & `/settings`)**: Private user accounts, password strength security, and data retention controls.
+
+---
+
+## 🛠️ Tech Stack & Tools
+
+| Layer | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Frontend** | **Next.js 14 (App Router)**, React 18 | Modern server-rendered UI and interactive client state |
+| **Styling** | **Tailwind CSS**, Lucide Icons | Responsive modern SaaS design system |
+| **Backend API** | **FastAPI**, Uvicorn, Python 3.10 | High-performance asynchronous REST API |
+| **Machine Learning** | **Scikit-Learn** (`HistGradientBoosting`) | Predicts continuous 0-100 virality score |
+| **Computer Vision** | **OpenCV (`cv2`)** | Extracts 0-3s hook motion flow, scene cuts & vibrancy |
+| **Audio Processing** | **Librosa**, MoviePy | Measures audio RMS energy, sound peaks & speech tempo |
+| **Metadata Parsing** | **yt-dlp** | URL metadata extraction for YouTube/TikTok links |
+| **Deployment** | **Vercel** (Frontend) + **Render** (Backend) | Global cloud hosting with auto-deployment CI/CD |
+
+---
+
+## 🧠 Machine Learning & Data Pipeline Explained
+
+### 1. The 7 Extracted Feature Signals
+1. **`hook_motion_intensity`**: Optical flow pixel displacement in the first 0–3 seconds (detects scroll-stopping hooks).
+2. **`scene_cut_rate`**: Number of camera cuts per minute (measures video pacing and retention).
+3. **`audio_rms_energy`**: Average acoustic power (detects speech clarity and audio drops).
+4. **`transcript_wpm`**: Spoken Words Per Minute (optimal range: 160–180 WPM for short-form retention).
+5. **`text_overlay_ratio`**: Caption coverage on screen (essential for 80% of users who watch on mute).
+6. **`color_vibrancy`**: HSV color saturation and lighting contrast warmth.
+7. **`resolution_aspect`**: Checks 9:16 vertical video format compliance.
+
+### 2. Model Performance
+- **Algorithm**: `HistGradientBoostingRegressor` (histogram-based gradient boosted decision trees).
+- **Dataset**: 10,000+ empirical engagement rows derived from real social media distributions (Log-normal views/shares, Beta retention).
+- **Evaluation**: **$R^2 = 0.8714$** (87.1% variance explained) with **$RMSE = 7.74$**.
+
+---
+
+## 📂 Project Directory Structure
+
+```text
 ai_virality_predictor/
 ├── backend/
-│   ├── dataset_loader.py          # Kaggle & HuggingFace Real Dataset Ingestor
-│   ├── train_model.py             # HistGradientBoosting ML Training Pipeline
-│   ├── vision_audio_extractor.py  # OpenCV, Librosa & OCR Multimodal Extractor
-│   ├── main.py                    # FastAPI Web Application & Prediction Endpoints
-│   ├── virality_model.pkl         # Trained Model Binary (R² = 0.8714)
-│   ├── model_metadata.json        # Evaluation Metrics & Feature Metadata
-│   ├── requirements.txt           # Python Dependencies
-│   └── render.yaml                # Render Cloud Deployment Blueprint
+│   ├── dataset_loader.py          # Kaggle & empirical dataset ingestion
+│   ├── train_model.py             # ML model training script
+│   ├── vision_audio_extractor.py  # OpenCV & Librosa feature extractor
+│   ├── main.py                    # FastAPI application endpoints
+│   ├── virality_model.pkl         # Serialized trained model
+│   ├── requirements.txt           # Python dependencies
+│   └── render.yaml                # Render cloud deployment blueprint
 ├── frontend/
 │   ├── src/
 │   │   ├── app/
-│   │   │   ├── page.js            # Hero Studio & Quick Scan
-│   │   │   ├── dashboard/         # Main Creator Dashboard
-│   │   │   ├── analysis/[id]/     # Full Diagnostic Audit & Video Summary
-│   │   │   ├── team/              # Collaborative Team Workspace
-│   │   │   ├── optimizer/         # Multi-Platform Blueprint Studio
-│   │   │   ├── compare/           # Side-by-Side Video A/B Comparison
-│   │   │   ├── history/           # Per-User Isolated History
-│   │   │   ├── auth/              # Secured Login & Signup
-│   │   │   └── settings/          # Account & Privacy Controls
+│   │   │   ├── page.js            # Landing page & quick analysis tool
+│   │   │   ├── dashboard/         # Creator dashboard
+│   │   │   ├── analysis/[id]/     # Full diagnostic report & AI summary
+│   │   │   ├── team/              # Team workspace & collaboration
+│   │   │   ├── optimizer/         # Multi-platform optimizer
+│   │   │   ├── compare/           # Side-by-side video comparison
+│   │   │   ├── history/           # Per-user isolated scan history
+│   │   │   ├── auth/              # Login & registration
+│   │   │   └── settings/          # Account & privacy controls
 │   │   ├── components/
-│   │   │   ├── analysis/          # Diagnostic Cards, Hook Lab & Summary
-│   │   │   └── layout/            # Navigation & Sidebar Layouts
+│   │   │   ├── analysis/          # Diagnostic cards, timeline & summary
+│   │   │   └── layout/            # Dashboard sidebar & header
 │   │   └── lib/
-│   │       ├── api.js             # Client API Service & Data Enrichment
-│   │       └── storage.js         # Isolated Per-User Local Persistence
-│   ├── package.json               # Next.js 14, Tailwind CSS, Lucide Icons
-│   └── vercel.json                # Vercel Deployment Configuration
-└── README.md                      # Comprehensive Documentation
+│   │       ├── api.js             # API client & fallback handlers
+│   │       └── storage.js         # Isolated local storage manager
+│   ├── package.json               # Next.js 14 & Tailwind dependencies
+│   └── vercel.json                # Vercel deployment configuration
+└── README.md                      # Project documentation
 ```
 
 ---
 
-## ⚡ Quick Start (Run Locally)
+## 🚀 Quick Start (Run Locally in 3 Steps)
 
-### 1. Start Backend Server
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/123angmish/ai-virality-predictor.git
+cd ai_virality_predictor
+```
+
+### Step 2: Start the Backend (FastAPI)
 ```bash
 cd backend
 pip install -r requirements.txt
 python train_model.py
 python -m uvicorn main:app --reload --port 8000
 ```
-API runs at **`http://127.0.0.1:8000`** (Docs at `/docs`).
+> Backend runs at: `http://127.0.0.1:8000` (API Docs at `http://127.0.0.1:8000/docs`)
 
-### 2. Start Frontend App
+### Step 3: Start the Frontend (Next.js)
+Open a new terminal window:
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-Open your browser at **`http://localhost:3000`**.
+> Open your browser at: **`http://localhost:3000`**
 
 ---
 
 ## 📄 License
-This project is licensed under the MIT License.
+This project is open-source and available under the [MIT License](LICENSE).
